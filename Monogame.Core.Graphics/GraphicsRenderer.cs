@@ -61,10 +61,10 @@ public class GraphicsRenderer : IGraphicsRenderer
         _isSuspended = true;
     }
 
-    public void Draw(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime, Effect effect = null)
+    public void Draw(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime, Effect effect = null, bool forceBasicTransform = false)
     {
         VerifySuspendState();
-        _transformBuffer.UpdateTransform(drawable, rect, _scalableContainer);
+        _transformBuffer.UpdateTransform(drawable, rect, _scalableContainer, forceBasicTransform);
         var color = GetAlphaColor(drawable.Opacity);
 
         SpriteBatch.Begin(effect: effect);
@@ -93,13 +93,12 @@ public class GraphicsRenderer : IGraphicsRenderer
 
     public void DrawOval(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime)
     {
-        Draw(drawable, texture, rect, gameTime, CircleShader);
+        Draw(drawable, texture, rect, gameTime, CircleShader, true);
     }
 
     public void DrawOval(Drawable drawable, Color color, Rectangle rect, GameTime gameTime)
     {
-        var texture = GetColorTexture(color);
-        Draw(drawable, texture, rect, gameTime, CircleShader);
+        DrawOval(drawable, GetColorTexture(color), rect, gameTime);
     }
 
     public void DrawTriangle(Drawable drawable, Color color, Vector2 a, Vector2 b, Vector2 c, GameTime gameTime)
@@ -122,7 +121,7 @@ public class GraphicsRenderer : IGraphicsRenderer
         TriangleShader.Parameters["by"].SetValue(b.Y / height);
         TriangleShader.Parameters["cx"].SetValue(c.X / width);
         TriangleShader.Parameters["cy"].SetValue(c.Y / height);
-        Draw(drawable, texture, rect, gameTime, TriangleShader);
+        Draw(drawable, texture, rect, gameTime, TriangleShader, true);
     }
 
     protected Texture2D CreateColorTexture(Color color)

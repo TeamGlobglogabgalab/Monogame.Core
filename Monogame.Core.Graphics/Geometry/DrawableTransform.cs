@@ -4,6 +4,7 @@ using Monogame.Core.Windows;
 using Monogame.Core.Graphics.Exceptions;
 using MonoGame.Core.Graphics.Components;
 using MonoGame.Core.Graphics.Origins;
+using Monogame.Core.Windows.Anchors;
 
 namespace Monogame.Core.Graphics.Geometry;
 
@@ -28,12 +29,12 @@ public class DrawableTransform
         UpdateTransform(drawable, position, container);
     }
 
-    public void UpdateTransform(Drawable drawable, Rectangle rect, IScalableContainer container)
+    public void UpdateTransform(Drawable drawable, Rectangle rect, IScalableContainer container, bool forceBasicTransform = false)
     {
         //Basic transform without rotation or scale
-        if (!IsDrawableRotated(drawable) && !IsDrawableScaled(drawable))
+        if (forceBasicTransform || (!IsDrawableRotated(drawable) && !IsDrawableScaled(drawable)))
         {
-            ApplyBasicTransform(drawable, rect, container);
+            ApplyBasicTransform(drawable.Origin, drawable.Position, drawable.Anchor, rect, container);
             return;
         }
 
@@ -77,22 +78,21 @@ public class DrawableTransform
         UpdateTransform(drawable, rect, container);
     }
 
-    private void ApplyBasicTransform(Drawable drawable, Rectangle rect, IScalableContainer container)
+    private void ApplyBasicTransform(Origin origin, Point position, Anchor anchor, Rectangle rect, IScalableContainer container)
     {
         //Origin
-        rect.X -= (int)drawable.Origin.X;
-        rect.Y -= (int)drawable.Origin.Y;
+        rect.X -= (int)origin.X;
+        rect.Y -= (int)origin.Y;
         
         //TODO : this code should not be used here
         var c = new Point(rect.Width, rect.Height);
         Vector2 rotatedPosition = GeometryTools.RotatePointAroundCenter(0, c, new Point(rect.X, rect.Y));
         
         //Anchor
-        var anchorPos = container.GetAnchorPosition(drawable.Position, rotatedPosition, drawable.Anchor);
+        var anchorPos = container.GetAnchorPosition(position, rotatedPosition, anchor);
         DestinationRect = new Rectangle(anchorPos.X, anchorPos.Y, rect.Width, rect.Height);
         DestinationPosition = new Vector2(anchorPos.X, anchorPos.Y);
 
-        //Useless in this case
         SourceRect = null;
         RotationRadian = 0;
     }
