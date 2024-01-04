@@ -46,10 +46,7 @@ public class Demo : Game
 
         MouseComponent = new MouseComponent(this.Window);
         _tween = TweenBuilder.From(new Point(100, 100)).To(new Point(666, 100))
-            .On(p => _cube.Position = p).For(666f).Bounce().EaseOut().Build();
-        _tweenSequence = TweenSequenceBuilder.From(new Point(100, 100))
-            .To(new Point(300, 500), new Point(600, 300), new Point(800, 100))
-            .For(1500f).Bounce(0.5f).EaseOut().Build();
+            .On(p => _cube.Position = p).For(250f).Back().EaseOut().Build();
     }
 
     protected override void Initialize()
@@ -77,26 +74,25 @@ public class Demo : Game
         base.Update(gameTime);
 
         if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            _tweenSequence.Start();
+            _tween.Start();
 
-        if (Keyboard.GetState().IsKeyDown(Keys.S))
-            Display1.ScalableContainer = new StretchContainer(GraphicsDevice, 1024, 600);
-        else if (Keyboard.GetState().IsKeyDown(Keys.K))
-            Display1.ScalableContainer = new KeepRatioContainer(GraphicsDevice, 1024, 600);
+        if (Keyboard.GetState().IsKeyDown(Keys.A))
+        {
+            _tween.Change(_cube.Position, new Point(100, 100), p => _cube.Position = p);
+            _tween.Start();
+        }
+        else if (Keyboard.GetState().IsKeyDown(Keys.Z))
+        {
+            _tween.Change(_cube.Position, new Point(666, 100), p => _cube.Position = p);
+            _tween.Start();
+        }
         else if (Keyboard.GetState().IsKeyDown(Keys.E))
-            _tweenSequence.GoForward();
-            //Display1.ScalableContainer = new StretchExpandContainer(GraphicsDevice, 1024, 600);
-        else if (Keyboard.GetState().IsKeyDown(Keys.R))
-            _tweenSequence.GoBackward();
-            //_btn.Scale = new Vector2(_btn.Scale.X - 0.05f, _btn.Scale.Y - 0.05f);
-        else if (Keyboard.GetState().IsKeyDown(Keys.E))
-            _btn.Scale = new Vector2(_btn.Scale.X + 0.05f, _btn.Scale.Y + 0.05f);
-        else if (Keyboard.GetState().IsKeyDown(Keys.D))
-            _btn.Rotation -= 1;
-        else if (Keyboard.GetState().IsKeyDown(Keys.F))
-            _btn.Rotation += 1;
+        {
+            _tween.Change(_cube.Position, new Point(366, 300), p => _cube.Position = p);
+            _tween.Start();
+        }
 
-        _cube.Position = _tweenSequence.Update(gameTime);
+        _tween.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)

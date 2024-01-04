@@ -15,7 +15,7 @@ public interface IGraphicsRenderer
     public IScalableContainer ScalableContainer { set; }
     public void Resume();
     public void Suspend();
-    public void Draw(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime, Effect effect = null);
+    public void Draw(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime, Effect effect = null, bool forceBasicTransform = false);
     public void DrawRectangle(Drawable drawable, Color color, Rectangle rect, GameTime gameTime, Effect effect = null);
     public void DrawString(Drawable drawable, SpriteFont font, string text, Vector2 position, Color color, GameTime gameTime, Effect effect = null);
     public void DrawOval(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime);
