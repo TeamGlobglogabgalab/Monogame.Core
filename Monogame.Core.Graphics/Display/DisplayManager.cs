@@ -61,7 +61,7 @@ public class DisplayManager : IDisposable
         var container = new KeepRatioContainer(monoGame.GraphicsDevice, monoGame.Window.ClientBounds.Width, monoGame.Window.ClientBounds.Height);
         Initialize(monoGame.Content, monoGame.GraphicsDevice,
             new FullScreen(monoGame.Window), container,
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, container));
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, container));
     }
 
     public DisplayManager(Game monoGame, IScalableContainer scalableContainer)
@@ -69,14 +69,14 @@ public class DisplayManager : IDisposable
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
         Initialize(monoGame.Content, monoGame.GraphicsDevice, 
             new FullScreen(monoGame.Window), scalableContainer, 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, scalableContainer));
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer));
     }
 
     public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
         Initialize(monoGame.Content, monoGame.GraphicsDevice, gameScreen, scalableContainer, 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, scalableContainer));
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer));
     }
 
     public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer, IGraphicsRenderer graphicsRenderer)

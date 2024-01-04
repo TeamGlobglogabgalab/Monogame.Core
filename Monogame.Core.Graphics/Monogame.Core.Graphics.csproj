@@ -11,4 +11,18 @@
     <ProjectReference Include="..\Monogame.Core.Windows\Monogame.Core.Windows.csproj" />
     <ProjectReference Include="..\Monogame.Core\Monogame.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Content\Shaders\Circle.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Monogame.Core.Graphics.Shaders\Circle.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Monogame.Core.Graphics.Shaders\Triangle.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\bin\" />
+  </ItemGroup>
 </Project>
