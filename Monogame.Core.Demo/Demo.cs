@@ -26,12 +26,9 @@ public class Demo : Game
     private ITween _tween;
     private ITweenSequence _tweenSequence;
     private TweenCube _cube;
+    private TweenCube _cube2;
     private EaseGrid _grid;
     private TextButton _btn;
-
-    private TweenCube _cube2;
-    private TweenCube _cube3;
-    private EaseGrid _grid2;
 
     public Demo()
     {
@@ -45,7 +42,7 @@ public class Demo : Game
         GraphicsDeviceManager.ApplyChanges();
 
         MouseComponent = new MouseComponent(this.Window);
-        _tween = TweenBuilder.From(new Point(100, 100)).To(new Point(666, 100))
+        _tween = TweenBuilder.From(new Point(100, 300)).To(new Point(666, 100))
             .On(p => _cube.Position = p).For(250f).Back().EaseOut().Build();
     }
 
@@ -57,15 +54,17 @@ public class Demo : Game
     protected override void LoadContent()
     {
         Display1 = new DisplayManager(this, new KeepRatioContainer());
-        Display2 = new DisplayManager(this, new PinpointScreen(Window, new Point(1024-200, 600-150), new Point(200, 150), new Padding(25), new BottomRightAnchor()), new KeepRatioContainer());
+        //Display2 = new DisplayManager(this, new PinpointScreen(Window, new Point(1024-200, 600-150), new Point(200, 150), new Padding(25), new BottomRightAnchor()), new KeepRatioContainer());
 
-        _cube = new TweenCube(Display1, new Point(100, 100), 0, "#FF4500");
+        _cube = new TweenCube(Display1, new Point(100, 300), 1, "#FF4500");
         _grid = new EaseGrid(Display1, new Point(512, 300), new Point(780, 466), 0);
-        _btn = new TextButton(Display1, MouseComponent, "Gloubi boulga", "Fonts/Roboto", new Point(350, 250), 0);
+        _btn = new TextButton(Display1, MouseComponent, "Gloubi boulga", "Fonts/Roboto", new Point(100, 100), 2);
 
-        _cube2 = new TweenCube(Display2, new Point(50, 50), 0, "#FF4500");
+        _cube2 = new TweenCube(Display1, new Point(0, 0), 1024, 0, "#FFFFFF");
+
+        /*_cube2 = new TweenCube(Display2, new Point(50, 50), 0, "#FF4500");
         _cube3 = new TweenCube(Display2, new Point(462, 250), 0, "#FF4500");
-        _grid2 = new EaseGrid(Display2, new Point(220, 116), new Point(780, 466), 0);
+        _grid2 = new EaseGrid(Display2, new Point(220, 116), new Point(780, 466), 0);*/
     }
 
     protected override void Update(GameTime gameTime)
@@ -78,7 +77,7 @@ public class Demo : Game
 
         if (Keyboard.GetState().IsKeyDown(Keys.A))
         {
-            _tween.Change(_cube.Position, new Point(100, 100), p => _cube.Position = p);
+            _tween.Change(_cube.Position, new Point(100, 300), p => _cube.Position = p);
             _tween.Start();
         }
         else if (Keyboard.GetState().IsKeyDown(Keys.Z))
@@ -92,18 +91,29 @@ public class Demo : Game
             _tween.Start();
         }
 
+        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+        {
+            var cam = Display1.GameScreen.Camera;
+            cam.Move(-5, 0);
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.Right))
+        {
+            var cam = Display1.GameScreen.Camera;
+            cam.Move(5, 0);
+        }
+
         _tween.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
         Display1.Begin(WindowBackColor);
-        Display1.Draw(gameTime, _btn, _cube);
+        Display1.Draw(gameTime, _btn, _cube, _cube2);
 
-        Display2.Begin(Color.Green);
-        Display2.Draw(gameTime, _cube2, _cube3);
+        //Display2.Begin(Color.Green);
+        //Display2.Draw(gameTime, _cube2, _cube3);
         
-        MultipleDisplayManager.EndAll(Display1, Display2);
+        MultipleDisplayManager.EndAll(Display1);
         /*var texture = new Texture2D(GraphicsDevice, 1, 1);
         texture.SetData(new[] { Color.Red });
         var r = _btn.WindowBoundingBox;

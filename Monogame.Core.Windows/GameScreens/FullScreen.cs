@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Monogame.Core;
+using Monogame.Core.Windows.Camera;
 using Monogame.Core.Windows.Structs;
 
 namespace Monogame.Core.Windows.GameScreens;
@@ -15,7 +16,6 @@ public class FullScreen : GameScreen
             return ApplyPadding(_bounds);
         }
     }
-
     public override Point TargetSize => _targetSize;
 
     private readonly Point _targetSize;

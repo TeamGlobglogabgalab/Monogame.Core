@@ -19,22 +19,22 @@ public class DrawableTransform
     {
     }
 
-    public DrawableTransform(Drawable drawable, Rectangle rect, IScalableContainer container)
+    public DrawableTransform(Drawable drawable, Rectangle rect, IScalableContainer container, IGameCamera camera)
     {
-        UpdateTransform(drawable, rect, container);
+        UpdateTransform(drawable, rect, container, camera);
     }
 
-    public DrawableTransform(Drawable drawable, Vector2 position, IScalableContainer container)
+    public DrawableTransform(Drawable drawable, Vector2 position, IScalableContainer container, IGameCamera camera)
     {
-        UpdateTransform(drawable, position, container);
+        UpdateTransform(drawable, position, container, camera);
     }
 
-    public void UpdateTransform(Drawable drawable, Rectangle rect, IScalableContainer container, bool forceBasicTransform = false)
+    public void UpdateTransform(Drawable drawable, Rectangle rect, IScalableContainer container, IGameCamera camera, bool forceBasicTransform = false)
     {
         //Basic transform without rotation or scale
         if (forceBasicTransform || (!IsDrawableRotated(drawable) && !IsDrawableScaled(drawable)))
         {
-            ApplyBasicTransform(drawable.Origin, drawable.Position, drawable.Anchor, rect, container);
+            ApplyBasicTransform(drawable.Origin, drawable.Position, drawable.Anchor, rect, container, camera);
             return;
         }
 
@@ -63,22 +63,31 @@ public class DrawableTransform
         RotationRadian = (float)rotation;
 
         //Anchor
-        var anchorPos = container.GetAnchorPosition(drawable.Position, rotatedPosition, drawable.Anchor);
-        DestinationRect = new Rectangle(anchorPos.X, anchorPos.Y, scaledRect.Width, scaledRect.Height);
-        DestinationPosition = new Vector2(anchorPos.X, anchorPos.Y);
+        Point finalPosition;
+        if(drawable.Anchor is not null)
+            finalPosition = container.GetAnchorPosition(drawable.Position, rotatedPosition, drawable.Anchor);
+        else //Camera
+        {
+            finalPosition.X = drawable.Position.X + (int)rotatedPosition.X - camera.Offset.X;
+            finalPosition.Y = drawable.Position.Y + (int)rotatedPosition.Y - camera.Offset.Y;
+        }
+
+        //Destination Rectangle
+        DestinationRect = new Rectangle(finalPosition.X, finalPosition.Y, scaledRect.Width, scaledRect.Height);
+        DestinationPosition = new Vector2(finalPosition.X, finalPosition.Y);
 
         //Source rectangle
         if (drawable.Size.X != 0 && drawable.Size.X != 0)
             SourceRect = new Rectangle(0, 0, drawable.Size.X, drawable.Size.Y);
     }
 
-    public void UpdateTransform(Drawable drawable, Vector2 position, IScalableContainer container)
+    public void UpdateTransform(Drawable drawable, Vector2 position, IScalableContainer container, IGameCamera camera)
     {
         var rect = new Rectangle((int)position.X, (int)position.Y, drawable.Size.X, drawable.Size.Y);
-        UpdateTransform(drawable, rect, container);
+        UpdateTransform(drawable, rect, container, camera);
     }
 
-    private void ApplyBasicTransform(Origin origin, Point position, Anchor anchor, Rectangle rect, IScalableContainer container)
+    private void ApplyBasicTransform(Origin origin, Point position, Anchor anchor, Rectangle rect, IScalableContainer container, IGameCamera camera)
     {
         //Origin
         rect.X -= (int)origin.X;
@@ -87,11 +96,18 @@ public class DrawableTransform
         //TODO : this code should not be used here
         var c = new Point(rect.Width, rect.Height);
         Vector2 rotatedPosition = GeometryTools.RotatePointAroundCenter(0, c, new Point(rect.X, rect.Y));
-        
+
         //Anchor
-        var anchorPos = container.GetAnchorPosition(position, rotatedPosition, anchor);
-        DestinationRect = new Rectangle(anchorPos.X, anchorPos.Y, rect.Width, rect.Height);
-        DestinationPosition = new Vector2(anchorPos.X, anchorPos.Y);
+        Point finalPosition;
+        if (anchor is not null)
+            finalPosition = container.GetAnchorPosition(position, rotatedPosition, anchor);
+        else //Camera
+        {
+            finalPosition.X = position.X + (int)rotatedPosition.X - camera.Offset.X;
+            finalPosition.Y = position.Y + (int)rotatedPosition.Y - camera.Offset.Y;
+        }
+        DestinationRect = new Rectangle(finalPosition.X, finalPosition.Y, rect.Width, rect.Height);
+        DestinationPosition = new Vector2(finalPosition.X, finalPosition.Y);
 
         SourceRect = null;
         RotationRadian = 0;

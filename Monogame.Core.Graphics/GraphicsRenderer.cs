@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Content;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Metadata;
+using Monogame.Core.Windows.GameScreens;
 
 namespace Monogame.Core.Graphics;
 
@@ -34,15 +35,17 @@ public class GraphicsRenderer : IGraphicsRenderer
 
     private bool _isSuspended;
     private IScalableContainer _scalableContainer;
+    private IGameScreen _gameScreen;
     private DrawableTransform _transformBuffer = new DrawableTransform();
     private Dictionary<Color, Texture2D> _colorTextures = new Dictionary<Color, Texture2D>();
 
-    public GraphicsRenderer(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, ContentManager content, IScalableContainer scalableContainer)
+    public GraphicsRenderer(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, ContentManager content, IScalableContainer scalableContainer, IGameScreen gameScreen)
     {
         SpriteBatch = spriteBatch;
         GraphicsDevice = graphicsDevice;
         _isSuspended = true;
         _scalableContainer = scalableContainer;
+        _gameScreen = gameScreen;
 
         var oldDirectory = content.RootDirectory;
         content.RootDirectory = AppDomain.CurrentDomain.BaseDirectory + ShadersLocation;
@@ -64,7 +67,7 @@ public class GraphicsRenderer : IGraphicsRenderer
     public void Draw(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime, Effect effect = null, bool forceBasicTransform = false)
     {
         VerifySuspendState();
-        _transformBuffer.UpdateTransform(drawable, rect, _scalableContainer, forceBasicTransform);
+        _transformBuffer.UpdateTransform(drawable, rect, _scalableContainer, _gameScreen.Camera, forceBasicTransform);
         var color = GetAlphaColor(drawable.Opacity);
 
         SpriteBatch.Begin(effect: effect);
@@ -82,7 +85,7 @@ public class GraphicsRenderer : IGraphicsRenderer
     public void DrawString(Drawable drawable, SpriteFont font, string text, Vector2 position, Color color, GameTime gameTime, Effect effect = null)
     {
         VerifySuspendState();
-        _transformBuffer.UpdateTransform(drawable, position, _scalableContainer);
+        _transformBuffer.UpdateTransform(drawable, position, _scalableContainer, _gameScreen.Camera);
         color = GetAlphaColor(color, drawable.Opacity);
 
         SpriteBatch.Begin(effect: effect);

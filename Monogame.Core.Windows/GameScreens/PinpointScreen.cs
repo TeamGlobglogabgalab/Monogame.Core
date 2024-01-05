@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Monogame.Core.Windows.Anchors;
+using Monogame.Core.Windows.Camera;
 using Monogame.Core.Windows.Structs;
 using System;
 using System.Collections.Generic;
@@ -22,20 +23,18 @@ public class PinpointScreen : GameScreen
             var pos = _anchor.GetAnchorPosition(_position, delta, GameWindow.ClientBounds.Width, GameWindow.ClientBounds.Height);
             _bounds.X = pos.X;
             _bounds.Y = pos.Y;
-            //Padding = _basePadding * minScale;
             return ApplyPadding(_bounds);
         }
     }
 
     public override Point TargetSize => _targetSize;
 
+    private readonly Point _targetSize;
     private Point _position;
     private Point _size;
     private Anchor _anchor;
     private Point _baseWindowSize;
     private Rectangle _bounds;
-    private Padding _basePadding;
-    private readonly Point _targetSize;
 
     public PinpointScreen(GameWindow gameWindow, Point position, Point size, Padding padding, Anchor anchor) : base(gameWindow, padding)
     {
@@ -46,7 +45,6 @@ public class PinpointScreen : GameScreen
         _anchor = anchor;
         _anchor.Initialize(position, _baseWindowSize.X, _baseWindowSize.Y);
         Padding = padding;
-        _basePadding = padding;
     }
 
     public PinpointScreen(GameWindow gameWindow, Point position, Point size, Padding padding) : 

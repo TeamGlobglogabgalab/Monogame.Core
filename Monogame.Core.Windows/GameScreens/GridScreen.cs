@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Monogame.Core.Windows.Camera;
 using Monogame.Core.Windows.Structs;
 using System;
 using System.Collections.Generic;
@@ -69,11 +70,11 @@ public class GridScreen : GameScreen
     }
     public override Point TargetSize => _targetSize;
 
+    private readonly Point _targetSize;
     private GridIndex _startGridIndex;
     private GridIndex _endGridIndex;
     private GridDefinition _gridDefinition;
     private Rectangle _bounds = new Rectangle();
-    private readonly Point _targetSize;
 
     public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex startGridIndex, GridIndex endGridIndex, Padding padding) : base(gameWindow, padding)
     {

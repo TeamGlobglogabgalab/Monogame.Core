@@ -59,24 +59,26 @@ public class DisplayManager : IDisposable
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
         var container = new KeepRatioContainer(monoGame.GraphicsDevice, monoGame.Window.ClientBounds.Width, monoGame.Window.ClientBounds.Height);
+        var gameScreen = new FullScreen(monoGame.Window);
         Initialize(monoGame.Content, monoGame.GraphicsDevice,
-            new FullScreen(monoGame.Window), container,
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, container));
+            gameScreen, container,
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, container, gameScreen));
     }
 
     public DisplayManager(Game monoGame, IScalableContainer scalableContainer)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
-        Initialize(monoGame.Content, monoGame.GraphicsDevice, 
-            new FullScreen(monoGame.Window), scalableContainer, 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer));
+        var gameScreen = new FullScreen(monoGame.Window);
+        Initialize(monoGame.Content, monoGame.GraphicsDevice,
+            gameScreen, scalableContainer, 
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, gameScreen));
     }
 
     public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
         Initialize(monoGame.Content, monoGame.GraphicsDevice, gameScreen, scalableContainer, 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer));
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, gameScreen));
     }
 
     public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer, IGraphicsRenderer graphicsRenderer)

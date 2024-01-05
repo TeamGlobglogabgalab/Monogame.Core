@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Monogame.Core.Windows.Camera;
 using Monogame.Core.Windows.Structs;
 using System;
 using System.Collections.Generic;
@@ -53,14 +54,14 @@ public class SmartGridScreen : GameScreen
     }
     public override Point TargetSize => _targetSize;
 
-    private int _screenIndex;
+    private readonly List<float> _ratioScores = new List<float>();
+    private readonly Point _targetSize;
     private readonly float _optimalScreenRatio;
+    private int _screenIndex;
     private GridIndex _gridIndex;
     private int _screenCount;
     private List<GridDefinition> _gridDefinitions;
     private Rectangle _bounds = new Rectangle();
-    private readonly List<float> _ratioScores = new List<float>();
-    private readonly Point _targetSize;
 
     public SmartGridScreen(GameWindow gameWindow, int screenCount, int screenIndex, int optimalWidth, int optimalHeight, Padding padding) : base(gameWindow, padding)
     {

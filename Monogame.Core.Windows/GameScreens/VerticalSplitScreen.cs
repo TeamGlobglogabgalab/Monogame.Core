@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Monogame.Core;
+using Monogame.Core.Windows.Camera;
 using Monogame.Core.Windows.Structs;
 
 namespace Monogame.Core.Windows.GameScreens;
@@ -22,29 +23,28 @@ public class VerticalSplitScreen : SplitScreen
     }
     public override Point TargetSize => _targetSize;
 
-    private Rectangle _bounds = new Rectangle();
     private readonly Point _targetSize;
+    private Rectangle _bounds = new Rectangle();
 
-    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex) : base(gameWindow, screenCount, screenIndex)
-    {
-        _targetSize = InitTargetSize();
-    }
-
-    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex, Padding padding) : base(gameWindow, screenCount, screenIndex, padding)
+    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) :
+        base(gameWindow, screenCount, startScreenIndex, endScreenIndex, padding)
     {
         _targetSize = InitTargetSize();
     }
 
     public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex) :
-        base(gameWindow, screenCount, startScreenIndex, endScreenIndex)
+        this(gameWindow, screenCount, startScreenIndex, endScreenIndex, new Padding(0))
     {
-        _targetSize = InitTargetSize();
     }
 
-    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) : 
-        base(gameWindow, screenCount, startScreenIndex, endScreenIndex, padding)
+    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex, Padding padding) : 
+        this(gameWindow, screenCount, screenIndex, screenIndex, padding)
     {
-        _targetSize = InitTargetSize();
+    }
+
+    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex) : 
+        this(gameWindow, screenCount, screenIndex, screenIndex, new Padding(0))
+    {
     }
 
     private Point InitTargetSize()

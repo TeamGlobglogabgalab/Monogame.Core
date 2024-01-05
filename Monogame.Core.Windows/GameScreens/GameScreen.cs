@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Monogame.Core.Windows.Camera;
 using Monogame.Core.Windows.Structs;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ public abstract class GameScreen : IGameScreen
     public abstract Rectangle ClientBounds { get; }
     public Padding Padding { get; set; }
     public float ScreenRatio => (float)ClientBounds.Width / (float)ClientBounds.Height;
-
+    public IGameCamera Camera { get; private set; }
     public abstract Point TargetSize { get; }
 
     protected GameWindow GameWindow;
@@ -22,6 +23,7 @@ public abstract class GameScreen : IGameScreen
     {
         GameWindow = gameWindow;
         Padding = padding;
+        Camera = new GameCamera();
     }
 
     public void Dispose()

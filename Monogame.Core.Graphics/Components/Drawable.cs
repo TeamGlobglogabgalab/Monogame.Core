@@ -54,7 +54,7 @@ public abstract class Drawable : IDrawable
         get => _position;
         set
         {
-            Anchor.UpdatePosition(value);
+            Anchor?.UpdatePosition(value);
             _position = value;
         }
     }
@@ -102,8 +102,8 @@ public abstract class Drawable : IDrawable
     protected Drawable(DisplayManager displayManager, Point position, Point size, Origin origin, float rotation, Origin scaleOrigin, Vector2 scale, int drawOrder)
     {
         _displayManager = displayManager;
-        _anchor = new MiddleCenterAnchor();
-        _anchor.Initialize(position, Container.TargetWidth, Container.TargetHeight);
+        /*_anchor = new MiddleCenterAnchor();
+        _anchor.Initialize(position, Container.TargetWidth, Container.TargetHeight);*/
 
         Position = position;
         DrawOrder = drawOrder;
