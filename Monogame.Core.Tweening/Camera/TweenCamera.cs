@@ -14,32 +14,32 @@ namespace Monogame.Core.Tweening.Camera;
 
 class TweenCamera : ITweenCamera, ICameraFor, ICameraInterpolation, ICameraEase, ICameraBuild
 {
-    public Point Offset => _offset;
+    public Point Target => _target;
 
-    private Point _offset;
+    private Point _target;
     private Tween<Point> _tween = new Tween<Point>();
 
     public void GoTo(Point point)
     {
-        _tween.Change(_offset, point);
+        _tween.Change(_target, point);
         _tween.Start();
     }
 
     public void GoTo(int x, int y)
     {
-        _tween.Change(_offset, new Point(x, y));
+        _tween.Change(_target, new Point(x, y));
         _tween.Start();
     }
 
     public void Move(Point point)
     {
-        _tween.Change(_offset, new Point(_offset.X + point.X, _offset.Y + point.Y));
+        _tween.Change(_target, new Point(_target.X + point.X, _target.Y + point.Y));
         _tween.Start();
     }
 
     public void Move(int x, int y)
     {
-        _tween.Change(_offset, new Point(_offset.X + x, _offset.Y + y));
+        _tween.Change(_target, new Point(_target.X + x, _target.Y + y));
         _tween.Start();
     }
 
@@ -50,7 +50,7 @@ class TweenCamera : ITweenCamera, ICameraFor, ICameraInterpolation, ICameraEase,
 
     public void Update(GameTime gameTime)
     {
-        _offset = _tween.Update(gameTime);
+        _target = _tween.Update(gameTime);
     }
 
     public ICameraInterpolation For(double milliseconds)
@@ -148,8 +148,8 @@ class TweenCamera : ITweenCamera, ICameraFor, ICameraInterpolation, ICameraEase,
 
     public ITweenCamera Build()
     {
-        _tween.Change(_offset, _offset);
-        _offset = new Point(0, 0);
+        _tween.Change(_target, _target);
+        _target = new Point(0, 0);
         return this;
     }
 }

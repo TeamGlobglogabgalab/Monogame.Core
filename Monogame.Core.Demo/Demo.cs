@@ -63,6 +63,7 @@ public class Demo : Game
         _cube = new TweenCube(Display1, new Point(100, 300), 2, "#FF4500");
         _grid = new EaseGrid(Display1, new Point(512, 300), new Point(780, 466), 1);
         _btn = new TextButton(Display1, MouseComponent, "Gloubi boulga", "Fonts/Roboto", new Point(100, 100), 2);
+        _btn.Anchor = new TopLeftAnchor();
         _bgTest = new BgTest(Display1, new Point(0, 0), 0);
     }
 
@@ -90,12 +91,8 @@ public class Demo : Game
             _tween.Start();
         }
 
+        _camera.GoTo(_cube.Position);
         _camera.Update(gameTime);
-        if (MouseComponent.LeftDown)
-        {
-            _camera.GoTo(MouseComponent.Position);
-        }
-
         _tween.Update(gameTime);
     }
 

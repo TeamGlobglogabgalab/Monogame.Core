@@ -102,20 +102,19 @@ public class DisplayManager : IDisposable
     public DisplayManager(Game monoGame, IGameScreen gameScreen = null, IScalableContainer scalableContainer = null, IGraphicsRenderer graphicsRenderer = null, IGameCamera camera = null)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
-        _camera = camera is not null ? camera : new GameCamera();
+        _camera = camera ?? new GameCamera();
+        var container = scalableContainer ?? new KeepRatioContainer(monoGame.GraphicsDevice, monoGame.Window.ClientBounds.Width, monoGame.Window.ClientBounds.Height);
         Initialize(monoGame.Content, monoGame.GraphicsDevice,
-            gameScreen is not null ? gameScreen : new FullScreen(monoGame.Window),
-            scalableContainer is not null ? scalableContainer : new KeepRatioContainer(monoGame.GraphicsDevice, monoGame.Window.ClientBounds.Width, monoGame.Window.ClientBounds.Height),
-            graphicsRenderer is not null ? graphicsRenderer : 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, _camera));
+            gameScreen ?? new FullScreen(monoGame.Window), container,
+            graphicsRenderer ?? new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, container, _camera));
     }
 
     public void Begin(Color clearColor, SpriteEffects spriteEffects = SpriteEffects.None)
     {
-        IsStarted = true;
         _spriteEffects = spriteEffects;
         ScalableContainer.SetRenderTarget(GameScreen, GraphicsDevice);
-        GraphicsDevice.Clear(clearColor);;
+        GraphicsDevice.Clear(clearColor);
+        IsStarted = true;
     }
 
     public void End()
@@ -174,8 +173,12 @@ public class DisplayManager : IDisposable
         GraphicsRenderer = graphicsRenderer;
         GraphicsRenderer.Camera = _camera;
         _gameScreen = gameScreen;
+
         _scalableContainer = scalableContainer;
-        if (!_scalableContainer.IsReady) _scalableContainer.UpdateTargetSize(GraphicsDevice, _gameScreen.TargetSize.X, _gameScreen.TargetSize.Y);
+        if (!_scalableContainer.IsReady) 
+            _scalableContainer.UpdateTargetSize(GraphicsDevice, _gameScreen.TargetSize.X, _gameScreen.TargetSize.Y);
+       
+        _camera.GoTo(new Point(_scalableContainer.RenderTargetCurrentSize.X / 2, _scalableContainer.RenderTargetCurrentSize.Y / 2));
     }
 
     private void DrawCollection(GameTime gameTime, ICollection<Drawable> drawables)

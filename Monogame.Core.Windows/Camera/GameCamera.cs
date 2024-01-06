@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,13 +10,13 @@ namespace Monogame.Core.Windows.Camera;
 
 public class GameCamera : IGameCamera
 {
-    public Point Offset => _offset;
+    public Point Target => _target;
 
-    private Point _offset;
+    private Point _target;
 
     public GameCamera()
     {
-        _offset = new Point(0, 0);
+        _target = new Point(0, 0);
     }
 
     public void Move(Point point)
@@ -25,18 +26,18 @@ public class GameCamera : IGameCamera
 
     public void Move(int x, int y)
     {
-        _offset.X += x;
-        _offset.Y += y;
+        _target.X += x;
+        _target.Y += y;
     }
 
     public void GoTo(Point point)
     {
-        _offset = point;
+        _target = point;
     }
 
     public void GoTo(int x, int y)
     {
-        _offset.X = x;
-        _offset.Y = y;
+        _target.X = x;
+        _target.Y = y;
     }
 }

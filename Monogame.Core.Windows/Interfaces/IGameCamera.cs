@@ -9,7 +9,7 @@ namespace Monogame.Core.Windows;
 
 public interface IGameCamera
 {
-    public Point Offset { get; }
+    public Point Target { get; }
     public void Move(Point point);
     public void Move(int x, int y);
     public void GoTo(Point point);
