@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using MonoGame.Core.Graphics.Components;
 using Monogame.Core.Tweening.Structs;
 using static System.Collections.Specialized.BitVector32;
+using System.Threading.Channels;
 
 namespace Monogame.Core.Tweening.Tweens;
 
@@ -168,10 +169,16 @@ class Tween<TIn> : TweenBase<TIn, ITween>,
         return _currentDuration;
     }
 
-    public void Change<T>(T from, T to, Action<T> on)
+    public void Change<T>(T from, T to)
     {
         From((TIn)(dynamic)from!);
         To((TIn)(dynamic)to!);
+        Reset(true);
+    }
+
+    public void Change<T>(T from, T to, Action<T> on)
+    {
+        Change(from, to);
         OutputAction = (value) => on.Invoke((T)(dynamic)value);
         Reset(true);
     }

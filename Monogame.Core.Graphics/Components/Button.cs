@@ -32,7 +32,7 @@ public abstract class Button : Drawable, IButton
     {
         get
         {
-            _drawableTransform.UpdateTransform(this, BoundingBox, Container, Screen.Camera);
+            _drawableTransform.UpdateTransform(this, BoundingBox, Container, Camera);
             var rect = Container.GetBoundingBoxRectangle(Screen, _drawableTransform.DestinationRect);
             return new RectangleTransform(rect, this.Origin, this.Rotation);
         }

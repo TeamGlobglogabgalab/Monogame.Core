@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Monogame.Core.Graphics\Monogame.Core.Graphics.csproj" />
+    <ProjectReference Include="..\Monogame.Core.Windows\Monogame.Core.Windows.csproj" />
     <ProjectReference Include="..\Monogame.Core\Monogame.Core.csproj" />
   </ItemGroup>
 

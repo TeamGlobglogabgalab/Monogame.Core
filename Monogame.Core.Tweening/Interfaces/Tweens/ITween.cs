@@ -15,5 +15,9 @@ public interface ITween : ITweenBase<ITween>
     /// <summary>
     /// Change tween values
     /// </summary>
+    void Change<T>(T from, T to);
+    /// <summary>
+    /// Change tween values
+    /// </summary>
     void Change<T>(T from, T to, Action<T> on);
 }

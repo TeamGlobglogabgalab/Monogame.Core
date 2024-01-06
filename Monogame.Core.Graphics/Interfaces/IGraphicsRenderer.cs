@@ -13,6 +13,7 @@ namespace Monogame.Core.Graphics;
 public interface IGraphicsRenderer
 {
     public IScalableContainer ScalableContainer { set; }
+    public IGameCamera Camera { set; }
     public void Resume();
     public void Suspend();
     public void Draw(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime, Effect effect = null, bool forceBasicTransform = false);

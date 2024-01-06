@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Monogame.Core.Demo.UI;
 using Monogame.Core.Graphics.Display;
 using Monogame.Core.Tweening;
 using Monogame.Core.Tweening.Builder;
+using Monogame.Core.Tweening.Camera;
 using Monogame.Core.Tweening.UI;
 using Monogame.Core.Windows.Anchors;
 using Monogame.Core.Windows.Containers;
@@ -26,9 +28,10 @@ public class Demo : Game
     private ITween _tween;
     private ITweenSequence _tweenSequence;
     private TweenCube _cube;
-    private TweenCube _cube2;
     private EaseGrid _grid;
     private TextButton _btn;
+    private BgTest _bgTest;
+    private ITweenCamera _camera;
 
     public Demo()
     {
@@ -44,6 +47,7 @@ public class Demo : Game
         MouseComponent = new MouseComponent(this.Window);
         _tween = TweenBuilder.From(new Point(100, 300)).To(new Point(666, 100))
             .On(p => _cube.Position = p).For(250f).Back().EaseOut().Build();
+        _camera = TweenCameraBuilder.For(500).Expo().EaseOut().Build();
     }
 
     protected override void Initialize()
@@ -53,18 +57,13 @@ public class Demo : Game
 
     protected override void LoadContent()
     {
-        Display1 = new DisplayManager(this, new KeepRatioContainer());
+        Display1 = new DisplayManager(this, camera: _camera);
         //Display2 = new DisplayManager(this, new PinpointScreen(Window, new Point(1024-200, 600-150), new Point(200, 150), new Padding(25), new BottomRightAnchor()), new KeepRatioContainer());
 
-        _cube = new TweenCube(Display1, new Point(100, 300), 1, "#FF4500");
-        _grid = new EaseGrid(Display1, new Point(512, 300), new Point(780, 466), 0);
+        _cube = new TweenCube(Display1, new Point(100, 300), 2, "#FF4500");
+        _grid = new EaseGrid(Display1, new Point(512, 300), new Point(780, 466), 1);
         _btn = new TextButton(Display1, MouseComponent, "Gloubi boulga", "Fonts/Roboto", new Point(100, 100), 2);
-
-        _cube2 = new TweenCube(Display1, new Point(0, 0), 1024, 0, "#FFFFFF");
-
-        /*_cube2 = new TweenCube(Display2, new Point(50, 50), 0, "#FF4500");
-        _cube3 = new TweenCube(Display2, new Point(462, 250), 0, "#FF4500");
-        _grid2 = new EaseGrid(Display2, new Point(220, 116), new Point(780, 466), 0);*/
+        _bgTest = new BgTest(Display1, new Point(0, 0), 0);
     }
 
     protected override void Update(GameTime gameTime)
@@ -91,15 +90,10 @@ public class Demo : Game
             _tween.Start();
         }
 
-        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+        _camera.Update(gameTime);
+        if (MouseComponent.LeftDown)
         {
-            var cam = Display1.GameScreen.Camera;
-            cam.Move(-5, 0);
-        }
-        if (Keyboard.GetState().IsKeyDown(Keys.Right))
-        {
-            var cam = Display1.GameScreen.Camera;
-            cam.Move(5, 0);
+            _camera.GoTo(MouseComponent.Position);
         }
 
         _tween.Update(gameTime);
@@ -108,7 +102,7 @@ public class Demo : Game
     protected override void Draw(GameTime gameTime)
     {
         Display1.Begin(WindowBackColor);
-        Display1.Draw(gameTime, _btn, _cube, _cube2);
+        Display1.Draw(gameTime, _btn, _cube, _bgTest);
 
         //Display2.Begin(Color.Green);
         //Display2.Draw(gameTime, _cube2, _cube3);

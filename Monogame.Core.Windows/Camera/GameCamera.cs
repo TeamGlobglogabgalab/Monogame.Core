@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Monogame.Core.Windows.Camera;
 
-class GameCamera : IGameCamera
+public class GameCamera : IGameCamera
 {
     public Point Offset => _offset;
 
@@ -27,5 +27,16 @@ class GameCamera : IGameCamera
     {
         _offset.X += x;
         _offset.Y += y;
+    }
+
+    public void GoTo(Point point)
+    {
+        _offset = point;
+    }
+
+    public void GoTo(int x, int y)
+    {
+        _offset.X = x;
+        _offset.Y = y;
     }
 }

@@ -14,5 +14,4 @@ public interface IGameScreen : IDisposable
     public Rectangle ClientBounds { get; }
     public float ScreenRatio { get; }
     public Padding Padding { get; set; }
-    public IGameCamera Camera { get; }
 }

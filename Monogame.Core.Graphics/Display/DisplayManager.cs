@@ -10,6 +10,7 @@ using MonoGame.Core.Graphics;
 using Monogame.Core.Windows;
 using Monogame.Core.Windows.Containers;
 using Monogame.Core.Windows.GameScreens;
+using Monogame.Core.Windows.Camera;
 using MonoGame.Core.Graphics.Components;
 
 namespace Monogame.Core.Graphics.Display;
@@ -38,6 +39,14 @@ public class DisplayManager : IDisposable
             GraphicsRenderer.ScalableContainer = value;
         }
     }
+    public IGameCamera Camera
+    {
+        get => _camera;
+        set
+        {
+            GraphicsRenderer.Camera = value;
+        }
+    }
 
     private bool IsStarted
     {
@@ -54,37 +63,51 @@ public class DisplayManager : IDisposable
     private SpriteEffects _spriteEffects;
     private IGameScreen _gameScreen;
     private IScalableContainer _scalableContainer;
+    private IGameCamera _camera;
 
     public DisplayManager(Game monoGame)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
+        _camera = new GameCamera();
         var container = new KeepRatioContainer(monoGame.GraphicsDevice, monoGame.Window.ClientBounds.Width, monoGame.Window.ClientBounds.Height);
-        var gameScreen = new FullScreen(monoGame.Window);
         Initialize(monoGame.Content, monoGame.GraphicsDevice,
-            gameScreen, container,
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, container, gameScreen));
+            new FullScreen(monoGame.Window), container,
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, container, _camera));
     }
 
     public DisplayManager(Game monoGame, IScalableContainer scalableContainer)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
-        var gameScreen = new FullScreen(monoGame.Window);
+        _camera = new GameCamera();
         Initialize(monoGame.Content, monoGame.GraphicsDevice,
-            gameScreen, scalableContainer, 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, gameScreen));
+            new FullScreen(monoGame.Window), scalableContainer, 
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, _camera));
     }
 
     public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
+        _camera = new GameCamera();
         Initialize(monoGame.Content, monoGame.GraphicsDevice, gameScreen, scalableContainer, 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, gameScreen));
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, _camera));
     }
 
     public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer, IGraphicsRenderer graphicsRenderer)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
+        _camera = new GameCamera();
         Initialize(monoGame.Content, monoGame.GraphicsDevice, gameScreen, scalableContainer, graphicsRenderer);
+    }
+
+    public DisplayManager(Game monoGame, IGameScreen gameScreen = null, IScalableContainer scalableContainer = null, IGraphicsRenderer graphicsRenderer = null, IGameCamera camera = null)
+    {
+        _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
+        _camera = camera is not null ? camera : new GameCamera();
+        Initialize(monoGame.Content, monoGame.GraphicsDevice,
+            gameScreen is not null ? gameScreen : new FullScreen(monoGame.Window),
+            scalableContainer is not null ? scalableContainer : new KeepRatioContainer(monoGame.GraphicsDevice, monoGame.Window.ClientBounds.Width, monoGame.Window.ClientBounds.Height),
+            graphicsRenderer is not null ? graphicsRenderer : 
+            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, _camera));
     }
 
     public void Begin(Color clearColor, SpriteEffects spriteEffects = SpriteEffects.None)
@@ -92,7 +115,7 @@ public class DisplayManager : IDisposable
         IsStarted = true;
         _spriteEffects = spriteEffects;
         ScalableContainer.SetRenderTarget(GameScreen, GraphicsDevice);
-        GraphicsDevice.Clear(clearColor);
+        GraphicsDevice.Clear(clearColor);;
     }
 
     public void End()
@@ -149,6 +172,7 @@ public class DisplayManager : IDisposable
         ContentManager = contentManager;
         GraphicsDevice = graphicsDevice;
         GraphicsRenderer = graphicsRenderer;
+        GraphicsRenderer.Camera = _camera;
         _gameScreen = gameScreen;
         _scalableContainer = scalableContainer;
         if (!_scalableContainer.IsReady) _scalableContainer.UpdateTargetSize(GraphicsDevice, _gameScreen.TargetSize.X, _gameScreen.TargetSize.Y);

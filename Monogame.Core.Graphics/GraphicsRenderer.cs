@@ -27,7 +27,11 @@ public class GraphicsRenderer : IGraphicsRenderer
     {
         set => _scalableContainer = value;
     }
-    
+    public IGameCamera Camera
+    {
+        set => _camera = value;
+    }
+
     protected SpriteBatch SpriteBatch;
     protected GraphicsDevice GraphicsDevice;
     protected Effect CircleShader { get; private set; }
@@ -35,17 +39,17 @@ public class GraphicsRenderer : IGraphicsRenderer
 
     private bool _isSuspended;
     private IScalableContainer _scalableContainer;
-    private IGameScreen _gameScreen;
+    private IGameCamera _camera;
     private DrawableTransform _transformBuffer = new DrawableTransform();
     private Dictionary<Color, Texture2D> _colorTextures = new Dictionary<Color, Texture2D>();
 
-    public GraphicsRenderer(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, ContentManager content, IScalableContainer scalableContainer, IGameScreen gameScreen)
+    public GraphicsRenderer(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, ContentManager content, IScalableContainer scalableContainer, IGameCamera camera)
     {
         SpriteBatch = spriteBatch;
         GraphicsDevice = graphicsDevice;
         _isSuspended = true;
         _scalableContainer = scalableContainer;
-        _gameScreen = gameScreen;
+        _camera = camera;
 
         var oldDirectory = content.RootDirectory;
         content.RootDirectory = AppDomain.CurrentDomain.BaseDirectory + ShadersLocation;
@@ -67,7 +71,7 @@ public class GraphicsRenderer : IGraphicsRenderer
     public void Draw(Drawable drawable, Texture2D texture, Rectangle rect, GameTime gameTime, Effect effect = null, bool forceBasicTransform = false)
     {
         VerifySuspendState();
-        _transformBuffer.UpdateTransform(drawable, rect, _scalableContainer, _gameScreen.Camera, forceBasicTransform);
+        _transformBuffer.UpdateTransform(drawable, rect, _scalableContainer, _camera, forceBasicTransform);
         var color = GetAlphaColor(drawable.Opacity);
 
         SpriteBatch.Begin(effect: effect);
@@ -85,7 +89,7 @@ public class GraphicsRenderer : IGraphicsRenderer
     public void DrawString(Drawable drawable, SpriteFont font, string text, Vector2 position, Color color, GameTime gameTime, Effect effect = null)
     {
         VerifySuspendState();
-        _transformBuffer.UpdateTransform(drawable, position, _scalableContainer, _gameScreen.Camera);
+        _transformBuffer.UpdateTransform(drawable, position, _scalableContainer, _camera);
         color = GetAlphaColor(color, drawable.Opacity);
 
         SpriteBatch.Begin(effect: effect);

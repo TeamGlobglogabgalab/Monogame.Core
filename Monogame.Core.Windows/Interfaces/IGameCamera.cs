@@ -12,4 +12,6 @@ public interface IGameCamera
     public Point Offset { get; }
     public void Move(Point point);
     public void Move(int x, int y);
+    public void GoTo(Point point);
+    public void GoTo(int x, int y);
 }
