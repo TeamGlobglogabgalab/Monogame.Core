@@ -12,6 +12,7 @@ using Monogame.Core.Windows.Containers;
 using Monogame.Core.Windows.GameScreens;
 using Monogame.Core.Windows.Camera;
 using MonoGame.Core.Graphics.Components;
+using System.ComponentModel;
 
 namespace Monogame.Core.Graphics.Display;
 
@@ -19,6 +20,7 @@ public class DisplayManager : IDisposable
 {
     public ContentManager ContentManager { get; private set; }
     public GraphicsDevice GraphicsDevice { get; private set; }
+    public GameWindow GameWindow { get; private set; }
     public IGraphicsRenderer GraphicsRenderer { get; private set; }
     public IGameScreen GameScreen
     {
@@ -65,48 +67,44 @@ public class DisplayManager : IDisposable
     private IScalableContainer _scalableContainer;
     private IGameCamera _camera;
 
-    public DisplayManager(Game monoGame)
+    public DisplayManager(Game monoGame) : this(monoGame, null, null, null, null)
     {
-        _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
-        _camera = new GameCamera();
-        var container = new KeepRatioContainer(monoGame.GraphicsDevice, monoGame.Window.ClientBounds.Width, monoGame.Window.ClientBounds.Height);
-        Initialize(monoGame.Content, monoGame.GraphicsDevice,
-            new FullScreen(monoGame.Window), container,
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, container, _camera));
     }
 
-    public DisplayManager(Game monoGame, IScalableContainer scalableContainer)
+    public DisplayManager(Game monoGame, IScalableContainer scalableContainer) :
+        this(monoGame, null, scalableContainer, null, null)
     {
-        _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
-        _camera = new GameCamera();
-        Initialize(monoGame.Content, monoGame.GraphicsDevice,
-            new FullScreen(monoGame.Window), scalableContainer, 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, _camera));
     }
 
-    public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer)
+    public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer) :
+        this(monoGame, gameScreen, scalableContainer, null, null)
     {
-        _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
-        _camera = new GameCamera();
-        Initialize(monoGame.Content, monoGame.GraphicsDevice, gameScreen, scalableContainer, 
-            new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, scalableContainer, _camera));
     }
 
-    public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer, IGraphicsRenderer graphicsRenderer)
+    public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer, IGraphicsRenderer graphicsRenderer) :
+        this(monoGame, gameScreen, scalableContainer, graphicsRenderer, new GameCamera())
     {
-        _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
-        _camera = new GameCamera();
-        Initialize(monoGame.Content, monoGame.GraphicsDevice, gameScreen, scalableContainer, graphicsRenderer);
     }
 
     public DisplayManager(Game monoGame, IGameScreen gameScreen = null, IScalableContainer scalableContainer = null, IGraphicsRenderer graphicsRenderer = null, IGameCamera camera = null)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
+        _gameScreen = gameScreen ?? new FullScreen(monoGame.Window);
+        
+        _scalableContainer = scalableContainer ?? new KeepRatioContainer(monoGame.GraphicsDevice, _gameScreen.ClientBounds.Width, _gameScreen.ClientBounds.Height);
+        if (!_scalableContainer.IsReady)
+            _scalableContainer.UpdateTargetSize(GraphicsDevice, _gameScreen.TargetSize.X, _gameScreen.TargetSize.Y);
+        
         _camera = camera ?? new GameCamera();
-        var container = scalableContainer ?? new KeepRatioContainer(monoGame.GraphicsDevice, monoGame.Window.ClientBounds.Width, monoGame.Window.ClientBounds.Height);
-        Initialize(monoGame.Content, monoGame.GraphicsDevice,
-            gameScreen ?? new FullScreen(monoGame.Window), container,
-            graphicsRenderer ?? new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, container, _camera));
+        _camera.GoTo(new Point(_scalableContainer.RenderTargetCurrentSize.X / 2, _scalableContainer.RenderTargetCurrentSize.Y / 2));
+
+        ContentManager = monoGame.Content;
+        GraphicsDevice = monoGame.GraphicsDevice;
+        GraphicsRenderer = graphicsRenderer ?? new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, _scalableContainer, _camera);
+        GraphicsRenderer.Camera = _camera;
+        GameWindow = monoGame.Window;
+
+        IsStarted = false;
     }
 
     public void Begin(Color clearColor, SpriteEffects spriteEffects = SpriteEffects.None)
@@ -163,22 +161,6 @@ public class DisplayManager : IDisposable
     {
         _spriteBatch?.Dispose();
         GC.SuppressFinalize(this);
-    }
-
-    private void Initialize(ContentManager contentManager, GraphicsDevice graphicsDevice, IGameScreen gameScreen, IScalableContainer scalableContainer, IGraphicsRenderer graphicsRenderer)
-    {
-        IsStarted = false;
-        ContentManager = contentManager;
-        GraphicsDevice = graphicsDevice;
-        GraphicsRenderer = graphicsRenderer;
-        GraphicsRenderer.Camera = _camera;
-        _gameScreen = gameScreen;
-
-        _scalableContainer = scalableContainer;
-        if (!_scalableContainer.IsReady) 
-            _scalableContainer.UpdateTargetSize(GraphicsDevice, _gameScreen.TargetSize.X, _gameScreen.TargetSize.Y);
-       
-        _camera.GoTo(new Point(_scalableContainer.RenderTargetCurrentSize.X / 2, _scalableContainer.RenderTargetCurrentSize.Y / 2));
     }
 
     private void DrawCollection(GameTime gameTime, ICollection<Drawable> drawables)

@@ -11,6 +11,14 @@ namespace Monogame.Core.Tweening;
 public interface ITweenCamera : IGameCamera
 {
     /// <summary>
+    /// Move to destination point using tween function
+    /// </summary>
+    public void MoveTo(Point point);
+    /// <summary>
+    /// Move to destination (x, y) using tween function
+    /// </summary>
+    public void MoveTo(int x, int y);
+    /// <summary>
     /// Change duration time (milliseconds)
     /// </summary>
     void ChangeDuration(double milliseconds);

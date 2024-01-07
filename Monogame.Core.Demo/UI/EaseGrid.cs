@@ -25,15 +25,12 @@ class EaseGrid : Drawable
     {
         if (size.X < 100 || size.Y < 100)
             throw new ArgumentException("Size must be minimum 100x100");
-
         Size = size;
-        Origin = new MiddleCenterOrigin(size);
-        ScaleOrigin = new BottomCenterOrigin(size);
 
         _rect = new Rectangle(0, 0, Size.X, Size.Y);
         _backgroundColor = new Color().FromHex("#0C0C0C");
         _lineColor =  new Color().FromHex("#272727");
-        _font = Content.Load<SpriteFont>("Fonts/Roboto");
+        _font = Content.Load<SpriteFont>("Fonts/Roboto-Light-78");
 
         //Lines
         int bottomPadding = (int)(Size.Y * 0.16);
@@ -49,12 +46,11 @@ class EaseGrid : Drawable
         //Texts
         var textColor = new Color().FromHex("#787878");
         var horizontalBase = Size.X - Padding;
-        var scale = Size.X >= 780 ? 1f : (float)Size.X / 780f;
         _easeTexts = new TextComponent[3]
         {
-            new TextComponent("Ease In", new Vector2(horizontalBase - 90 * scale, _linesRectangles[0].Y + 8), textColor, scale), 
-            new TextComponent("Ease Out", new Vector2(horizontalBase - 115 * scale, _linesRectangles[1].Y + 8), textColor, scale),
-            new TextComponent("Ease In Out", new Vector2(horizontalBase - 145 * scale, _linesRectangles[2].Y + 8), textColor, scale)
+            new TextComponent("Ease In", new Vector2(horizontalBase - _font.MeasureString("Ease In").X, _linesRectangles[0].Y + 8), textColor), 
+            new TextComponent("Ease Out", new Vector2(horizontalBase - _font.MeasureString("Ease Out").X, _linesRectangles[1].Y + 8), textColor),
+            new TextComponent("Ease In Out", new Vector2(horizontalBase - _font.MeasureString("Ease In Out").X, _linesRectangles[2].Y + 8), textColor)
         };
     }
 

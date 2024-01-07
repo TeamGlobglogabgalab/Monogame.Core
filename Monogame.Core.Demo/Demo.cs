@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Monogame.Core.Demo.UI;
+using Monogame.Core.Demo.Window;
 using Monogame.Core.Graphics.Display;
 using Monogame.Core.Tweening;
 using Monogame.Core.Tweening.Builder;
@@ -19,18 +20,20 @@ namespace Monogame.Core.Demo;
 public class Demo : Game
 {
     public static readonly Color WindowBackColor = new Color().FromHex("#141414");
+    public static readonly Color PrimaryColor = new Color().FromHex("#9370DB");
 
     private GraphicsDeviceManager GraphicsDeviceManager { get; set; }
-    private DisplayManager Display1 { get; set; }
-    private DisplayManager Display2 { get; set; }
-    private MouseComponent MouseComponent { get; set; }
+    private DisplayManager MainDisplay { get; set; }
+    private DisplayManager GridDisplay { get; set; }
 
-    private ITween _tween;
+    /*private ITween _tween;
     private ITweenSequence _tweenSequence;
     private TweenCube _cube;
     private EaseGrid _grid;
     private TextButton _btn;
-    private BgTest _bgTest;
+    private BgTest _bgTest;*/
+    private GrowShrinkButton _btn;
+    private EaseGrid _grid;
     private ITweenCamera _camera;
 
     public Demo()
@@ -40,13 +43,10 @@ public class Demo : Game
         Content.RootDirectory = "Content";
 
         GraphicsDeviceManager  = new GraphicsDeviceManager(this);
-        GraphicsDeviceManager.PreferredBackBufferWidth = 1024;
-        GraphicsDeviceManager.PreferredBackBufferHeight = 600;
-        GraphicsDeviceManager.ApplyChanges();
+        WindowResizer.SetWindowSize(GraphicsDeviceManager);
 
-        MouseComponent = new MouseComponent(this.Window);
-        _tween = TweenBuilder.From(new Point(100, 300)).To(new Point(666, 100))
-            .On(p => _cube.Position = p).For(250f).Back().EaseOut().Build();
+        /*_tween = TweenBuilder.From(new Point(100, 300)).To(new Point(666, 100))
+            .On(p => _cube.Position = p).For(250f).Back().EaseOut().Build();*/
         _camera = TweenCameraBuilder.For(500).Expo().EaseOut().Build();
     }
 
@@ -57,54 +57,40 @@ public class Demo : Game
 
     protected override void LoadContent()
     {
-        Display1 = new DisplayManager(this, camera: _camera);
-        //Display2 = new DisplayManager(this, new PinpointScreen(Window, new Point(1024-200, 600-150), new Point(200, 150), new Padding(25), new BottomRightAnchor()), new KeepRatioContainer());
+        MainDisplay = new DisplayManager(this,
+            gameScreen: new FullScreen(Window),
+            scalableContainer: new KeepRatioContainer(GraphicsDevice, WindowResizer.TargetResolution.X, WindowResizer.TargetResolution.Y));
+        GridDisplay = new DisplayManager(this,
+            gameScreen: new PinpointScreen(Window, new Point(263, 141), new Point(914, 511), new Padding(0), new BottomRightAnchor(), MainDisplay.ScalableContainer),
+            scalableContainer: new StretchContainer(GraphicsDevice, 2438, 1363),
+            camera: _camera);
 
-        _cube = new TweenCube(Display1, new Point(100, 300), 2, "#FF4500");
+        /*_cube = new TweenCube(Display1, new Point(100, 300), 2, "#FF4500");
         _grid = new EaseGrid(Display1, new Point(512, 300), new Point(780, 466), 1);
-        _btn = new TextButton(Display1, MouseComponent, "Gloubi boulga", "Fonts/Roboto", new Point(100, 100), 2);
+        _btn = new TextButton(Display1, "Gloubi boulga", "Fonts/Roboto", new Point(100, 100), 2);
         _btn.Anchor = new TopLeftAnchor();
-        _bgTest = new BgTest(Display1, new Point(0, 0), 0);
+        _bgTest = new BgTest(Display1, new Point(0, 0), 0);*/
+        _btn = new Logo(MainDisplay, new Point(65, 65), 0);
+        _grid = new EaseGrid(GridDisplay, new Point(0, 0), new Point(2438, 1363), 0);
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
         base.Update(gameTime);
+        if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-        if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            _tween.Start();
-
-        if (Keyboard.GetState().IsKeyDown(Keys.A))
-        {
-            _tween.Change(_cube.Position, new Point(100, 300), p => _cube.Position = p);
-            _tween.Start();
-        }
-        else if (Keyboard.GetState().IsKeyDown(Keys.Z))
-        {
-            _tween.Change(_cube.Position, new Point(666, 100), p => _cube.Position = p);
-            _tween.Start();
-        }
-        else if (Keyboard.GetState().IsKeyDown(Keys.E))
-        {
-            _tween.Change(_cube.Position, new Point(366, 300), p => _cube.Position = p);
-            _tween.Start();
-        }
-
-        _camera.GoTo(_cube.Position);
         _camera.Update(gameTime);
-        _tween.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        Display1.Begin(WindowBackColor);
-        Display1.Draw(gameTime, _btn, _cube, _bgTest);
+        MainDisplay.Begin(WindowBackColor);
+        MainDisplay.Draw(gameTime, _btn);
 
-        //Display2.Begin(Color.Green);
-        //Display2.Draw(gameTime, _cube2, _cube3);
+        GridDisplay.Begin(Color.Black);
+        GridDisplay.Draw(gameTime, _grid);
         
-        MultipleDisplayManager.EndAll(Display1);
+        MultipleDisplayManager.EndAll(MainDisplay, GridDisplay);
         /*var texture = new Texture2D(GraphicsDevice, 1, 1);
         texture.SetData(new[] { Color.Red });
         var r = _btn.WindowBoundingBox;

@@ -25,7 +25,7 @@ public class FullScreen : GameScreen
     {
         GameWindow = gameWindow;
         _targetSize = new Point(gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height);
-        _bounds = new Rectangle(0, 0, gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height);
+        //_bounds = new Rectangle(0, 0, gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height);
     }
 
     public FullScreen(GameWindow gameWindow) : this(gameWindow, new Padding(0))

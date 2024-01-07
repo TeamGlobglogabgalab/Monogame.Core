@@ -21,14 +21,14 @@ class TweenCamera : ITweenCamera, ICameraFor, ICameraInterpolation, ICameraEase,
 
     public void GoTo(Point point)
     {
-        _tween.Change(_target, point);
-        _tween.Start();
+        _target = point;
+        MoveTo(point);
     }
 
     public void GoTo(int x, int y)
     {
-        _tween.Change(_target, new Point(x, y));
-        _tween.Start();
+        _target = new Point(x, y);
+        MoveTo(x, y);
     }
 
     public void Move(Point point)
@@ -40,6 +40,18 @@ class TweenCamera : ITweenCamera, ICameraFor, ICameraInterpolation, ICameraEase,
     public void Move(int x, int y)
     {
         _tween.Change(_target, new Point(_target.X + x, _target.Y + y));
+        _tween.Start();
+    }
+
+    public void MoveTo(Point point)
+    {
+        _tween.Change(_target, point);
+        _tween.Start();
+    }
+
+    public void MoveTo(int x, int y)
+    {
+        _tween.Change(_target, new Point(x, y));
         _tween.Start();
     }
 
