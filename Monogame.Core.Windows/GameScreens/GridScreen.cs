@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Monogame.Core.Windows.Camera;
+using Monogame.Core.Windows.Containers;
 using Monogame.Core.Windows.Structs;
 using System;
 using System.Collections.Generic;
@@ -76,25 +77,44 @@ public class GridScreen : GameScreen
     private GridDefinition _gridDefinition;
     private Rectangle _bounds = new Rectangle();
 
-    public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex startGridIndex, GridIndex endGridIndex, Padding padding) : base(gameWindow, padding)
+    public GridScreen(GameWindow gameWindow, IScalableContainer container, GridDefinition definition, GridIndex startGridIndex, GridIndex endGridIndex, Padding padding) : base(gameWindow, container, padding)
     {
         GridDefinition = definition;
         EndGridIndex = endGridIndex;
         StartGridIndex = startGridIndex;
         _targetSize = InitTargetSize();
     }
+    public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex startGridIndex, GridIndex endGridIndex, Padding padding) :
+        this(gameWindow, GetDefaultContainer(), definition, startGridIndex, endGridIndex, padding)
+    {
+    }
 
-    public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex startGridIndex, GridIndex endGridIndex) : 
+    public GridScreen(GameWindow gameWindow, IScalableContainer container, GridDefinition definition, GridIndex startGridIndex, GridIndex endGridIndex) :
+        this(gameWindow, container, definition, startGridIndex, endGridIndex, new Padding(0))
+    {
+    }
+
+    public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex startGridIndex, GridIndex endGridIndex) :
         this(gameWindow, definition, startGridIndex, endGridIndex, new Padding(0))
     {
     }
 
-    public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex gridIndex, Padding padding) : 
+    public GridScreen(GameWindow gameWindow, IScalableContainer container, GridDefinition definition, GridIndex gridIndex, Padding padding) :
+        this(gameWindow, container, definition, gridIndex, gridIndex, padding)
+    {
+    }
+
+    public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex gridIndex, Padding padding) :
         this(gameWindow, definition, gridIndex, gridIndex, padding)
     {
     }
 
-    public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex gridIndex) : 
+    public GridScreen(GameWindow gameWindow, IScalableContainer container, GridDefinition definition, GridIndex gridIndex) :
+        this(gameWindow, container, definition, gridIndex, gridIndex, new Padding(0))
+    {
+    }
+
+    public GridScreen(GameWindow gameWindow, GridDefinition definition, GridIndex gridIndex) :
         this(gameWindow, definition, gridIndex, gridIndex, new Padding(0))
     {
     }

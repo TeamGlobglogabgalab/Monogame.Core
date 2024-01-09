@@ -11,6 +11,8 @@ namespace Monogame.Core.Windows.Containers;
 
 public class ExpandContainer : ScalableContainer
 {
+    private Vector2 _drawScale = new Vector2(1, 1);
+
     public ExpandContainer() : base()
     {
     }
@@ -36,8 +38,12 @@ public class ExpandContainer : ScalableContainer
         return new Rectangle(rect.X + (int)screenPos.X, rect.Y + (int)screenPos.Y, rect.Width, rect.Height);
     }
 
-    public override void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
+    /*public override void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
     {
         spriteBatch.Draw(RenderTarget, GetScreenPosition(gameScreen), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), spriteEffects, 0f);
-    }
+    }*/
+
+    public override Vector2 GetDrawPosition(IGameScreen gameScreen) => GetScreenPosition(gameScreen);
+
+    public override Vector2 GetDrawScale(IGameScreen gameScreen) => _drawScale;
 }

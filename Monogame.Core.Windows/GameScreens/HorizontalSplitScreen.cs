@@ -26,10 +26,19 @@ public class HorizontalSplitScreen : SplitScreen
     private readonly Point _targetSize;
     private Rectangle _bounds = new Rectangle();
 
-    public HorizontalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) :
-        base(gameWindow, screenCount, startScreenIndex, endScreenIndex, padding)
+    public HorizontalSplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) :
+        base(gameWindow, container, screenCount, startScreenIndex, endScreenIndex, padding)
     {
         _targetSize = InitTargetSize();
+    }
+    public HorizontalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) :
+        this(gameWindow, GetDefaultContainer(), screenCount, startScreenIndex, endScreenIndex, padding)
+    {
+    }
+
+    public HorizontalSplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int startScreenIndex, int endScreenIndex) :
+        this(gameWindow, container, screenCount, startScreenIndex, endScreenIndex, new Padding(0))
+    {
     }
 
     public HorizontalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex) :
@@ -37,13 +46,23 @@ public class HorizontalSplitScreen : SplitScreen
     {
     }
 
-    public HorizontalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex, Padding padding) : 
+    public HorizontalSplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex, Padding padding) : 
+        this(gameWindow, container, screenCount, screenIndex, screenIndex, padding)
+    {
+    }
+
+    public HorizontalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex, Padding padding) :
         this(gameWindow, screenCount, screenIndex, screenIndex, padding)
     {
     }
 
+    public HorizontalSplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex) :
+        this(gameWindow, container, screenCount, screenIndex, screenIndex, new Padding(0)) 
+    {
+    }
+
     public HorizontalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex) :
-        this(gameWindow, screenCount, screenIndex, screenIndex, new Padding(0)) 
+        this(gameWindow, screenCount, screenIndex, screenIndex, new Padding(0))
     {
     }
 

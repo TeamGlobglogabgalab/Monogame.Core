@@ -63,7 +63,7 @@ public class SmartGridScreen : GameScreen
     private List<GridDefinition> _gridDefinitions;
     private Rectangle _bounds = new Rectangle();
 
-    public SmartGridScreen(GameWindow gameWindow, int screenCount, int screenIndex, int optimalWidth, int optimalHeight, Padding padding) : base(gameWindow, padding)
+    public SmartGridScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex, int optimalWidth, int optimalHeight, Padding padding) : base(gameWindow, container, padding)
     {
         ScreenCount = screenCount;
         ScreenIndex = screenIndex;
@@ -71,13 +71,33 @@ public class SmartGridScreen : GameScreen
         _targetSize = InitTargetSize();
     }
 
-    public SmartGridScreen(GameWindow gameWindow, int screenCount, int screenIndex, int optimalWidth, int optimalHeight) : 
+    public SmartGridScreen(GameWindow gameWindow, int screenCount, int screenIndex, int optimalWidth, int optimalHeight, Padding padding) : 
+        this(gameWindow, GetDefaultContainer(), screenCount, screenIndex, optimalWidth, optimalHeight, padding)
+    {
+    }
+
+    public SmartGridScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex, int optimalWidth, int optimalHeight) : 
+        this(gameWindow, container, screenCount, screenIndex, optimalWidth, optimalHeight, new Padding(0))
+    {
+    }
+
+    public SmartGridScreen(GameWindow gameWindow, int screenCount, int screenIndex, int optimalWidth, int optimalHeight) :
         this(gameWindow, screenCount, screenIndex, optimalWidth, optimalHeight, new Padding(0))
+    {
+    }
+
+    public SmartGridScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex, float optimalScreenRatio, Padding padding) :
+        this(gameWindow, container, screenCount, screenIndex, (int)(900 * optimalScreenRatio), 900, padding)
     {
     }
 
     public SmartGridScreen(GameWindow gameWindow, int screenCount, int screenIndex, float optimalScreenRatio, Padding padding) :
         this(gameWindow, screenCount, screenIndex, (int)(900 * optimalScreenRatio), 900, padding)
+    {
+    }
+
+    public SmartGridScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex, float optimalScreenRatio) :
+        this(gameWindow, container, screenCount, screenIndex, (int)(900 * optimalScreenRatio), 900, new Padding(0))
     {
     }
 

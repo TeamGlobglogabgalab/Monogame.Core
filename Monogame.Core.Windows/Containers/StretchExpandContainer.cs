@@ -59,10 +59,18 @@ public class StretchExpandContainer : ScalableContainer
             (int)(rect.Height * minScale));
     }
 
-    public override void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
+    /*public override void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
     {
         float minScale = GetMinScale(gameScreen);
         spriteBatch.Draw(RenderTarget, GetScreenPosition(gameScreen), null, Color.White, 0f, Vector2.Zero, new Vector2(minScale, minScale), spriteEffects, 0f);
+    }*/
+
+    public override Vector2 GetDrawPosition(IGameScreen gameScreen) => GetScreenPosition(gameScreen);
+
+    public override Vector2 GetDrawScale(IGameScreen gameScreen)
+    {
+        var minScale = GetMinScale(gameScreen);
+        return new Vector2(minScale, minScale);
     }
 
     private float GetMinScale(IGameScreen gameScreen)

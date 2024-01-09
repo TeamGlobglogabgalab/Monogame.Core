@@ -26,14 +26,29 @@ public class VerticalSplitScreen : SplitScreen
     private readonly Point _targetSize;
     private Rectangle _bounds = new Rectangle();
 
-    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) :
-        base(gameWindow, screenCount, startScreenIndex, endScreenIndex, padding)
+    public VerticalSplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) :
+        base(gameWindow, container, screenCount, startScreenIndex, endScreenIndex, padding)
     {
         _targetSize = InitTargetSize();
     }
 
+    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) :
+        this(gameWindow, GetDefaultContainer(), screenCount, startScreenIndex, endScreenIndex, padding)
+    {
+    }
+
+    public VerticalSplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int startScreenIndex, int endScreenIndex) :
+        this(gameWindow, container, screenCount, startScreenIndex, endScreenIndex, new Padding(0))
+    {
+    }
+
     public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex) :
-        this(gameWindow, screenCount, startScreenIndex, endScreenIndex, new Padding(0))
+       this(gameWindow, screenCount, startScreenIndex, endScreenIndex, new Padding(0))
+    {
+    }
+
+    public VerticalSplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex, Padding padding) : 
+        this(gameWindow, container, screenCount, screenIndex, screenIndex, padding)
     {
     }
 
@@ -42,7 +57,12 @@ public class VerticalSplitScreen : SplitScreen
     {
     }
 
-    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex) : 
+    public VerticalSplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex) : 
+        this(gameWindow, container, screenCount, screenIndex, screenIndex, new Padding(0))
+    {
+    }
+
+    public VerticalSplitScreen(GameWindow gameWindow, int screenCount, int screenIndex) :
         this(gameWindow, screenCount, screenIndex, screenIndex, new Padding(0))
     {
     }

@@ -13,11 +13,13 @@ public interface IScalableContainer : IDisposable
 {
     public int TargetWidth { get; }
     public int TargetHeight { get; }
-    public Point RenderTargetCurrentSize { get; }
+    public RenderTarget2D RenderTarget { get; }
+    public Point RenderingSize { get; }
     public bool IsReady { get; }
     public void UpdateTargetSize(GraphicsDevice graphicsDevice, int targetWidth, int targetHeight);
     public Point GetAnchorPosition(Point basePosition, Vector2 targetPosition, Anchor anchor);
     public void SetRenderTarget(IGameScreen gameScreen, GraphicsDevice graphicsDevice);
     public Rectangle GetBoundingBoxRectangle(IGameScreen gameScreen, Rectangle rect);
-    public void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects);
+    public Vector2 GetDrawPosition(IGameScreen gameScreen);
+    public Vector2 GetDrawScale(IGameScreen gameScreen);
 }

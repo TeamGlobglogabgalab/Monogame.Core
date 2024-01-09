@@ -21,7 +21,6 @@ public class PinpointScreen : GameScreen
             _bounds.Height = (int)(_size.Y * minScale);
             var delta = new Point(_size.X - _bounds.Width, _size.Y - _bounds.Height);
             Point clientBounds = new Point(GameWindow.ClientBounds.Width, GameWindow.ClientBounds.Height);
-            //if(_parentContainer is not null) clientBounds = _parentContainer.RenderTargetCurrentSize;
             var pos = _anchor.GetAnchorPosition(_position, delta, clientBounds.X, clientBounds.Y);
             _bounds.X = pos.X;
             _bounds.Y = pos.Y;
@@ -37,9 +36,8 @@ public class PinpointScreen : GameScreen
     private Anchor _anchor;
     private Point _baseWindowSize;
     private Rectangle _bounds;
-    private readonly IScalableContainer? _parentContainer;
 
-    public PinpointScreen(GameWindow gameWindow, Point position, Point size, Padding padding, Anchor anchor, IScalableContainer parentContainer) : base(gameWindow, padding)
+    public PinpointScreen(GameWindow gameWindow, Point position, Point size, Anchor anchor, Padding padding) : base(gameWindow, GetDefaultContainer(), padding)
     {
         _position = position;
         _size = size;
@@ -47,22 +45,11 @@ public class PinpointScreen : GameScreen
         _baseWindowSize = new Point(gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height);
         _anchor = anchor;
         _anchor.Initialize(position, _baseWindowSize.X, _baseWindowSize.Y);
-        _parentContainer = parentContainer;
         Padding = padding;
     }
 
-    public PinpointScreen(GameWindow gameWindow, Point position, Point size, Padding padding) : 
-        this(gameWindow, position, size, padding, new MiddleCenterAnchor(), null)
-    {
-    }
-
     public PinpointScreen(GameWindow gameWindow, Point position, Point size, Anchor anchor) :
-        this(gameWindow, position, size, new Padding(0), anchor, null)
-    {
-    }
-
-    public PinpointScreen(GameWindow gameWindow, Point position, Point size) :
-        this(gameWindow, position, size, new Padding(0), new MiddleCenterAnchor(), null)
+        this(gameWindow, position, size, anchor, new Padding(0))
     {
     }
 

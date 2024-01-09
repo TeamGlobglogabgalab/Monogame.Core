@@ -14,12 +14,9 @@ public abstract class ScalableContainer : IScalableContainer
 {
     public int TargetWidth { get; private set; }
     public int TargetHeight { get; private set; }
-    public Point RenderTargetCurrentSize => new Point(RenderTarget.Width, RenderTarget.Height);
-    public bool IsReady => _isReady;
-
-    public RenderTarget2D RenderTarget;
-
-    private bool _isReady = false;
+    public RenderTarget2D RenderTarget { get; protected set; }
+    public Point RenderingSize => new Point(RenderTarget.Width, RenderTarget.Height);
+    public bool IsReady { get; private set; }
 
     protected ScalableContainer()
     {
@@ -38,14 +35,14 @@ public abstract class ScalableContainer : IScalableContainer
         TargetWidth = targetWidth;
         TargetHeight = targetHeight;
         RenderTarget = new RenderTarget2D(graphicsDevice, targetWidth, targetHeight);
-        _isReady = true;
+        IsReady = true;
     }
 
     public Point GetAnchorPosition(Point basePosition, Vector2 targetPosition, Anchor anchor)
     {
         return anchor.GetAnchorPosition(
             new Point(basePosition.X + (int)targetPosition.X, basePosition.Y + (int)targetPosition.Y),
-            RenderTargetCurrentSize.X, RenderTargetCurrentSize.Y);
+            RenderingSize.X, RenderingSize.Y);
     }
 
     public virtual void SetRenderTarget(IGameScreen gameScreen, GraphicsDevice graphicsDevice)
@@ -60,7 +57,9 @@ public abstract class ScalableContainer : IScalableContainer
     }
 
     public abstract Rectangle GetBoundingBoxRectangle(IGameScreen gameScreen, Rectangle rect);
-    public abstract void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects);
+    //public abstract void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects);
+    public abstract Vector2 GetDrawPosition(IGameScreen gameScreen);
+    public abstract Vector2 GetDrawScale(IGameScreen gameScreen);
 
     protected Rectangle GetAnchorBoundingBox(Point position, Anchor anchor, Rectangle baseRect)
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Monogame.Core.Windows.Containers;
 using Monogame.Core.Windows.Structs;
 using System;
 using System.Collections.Generic;
@@ -49,24 +50,44 @@ public abstract class SplitScreen : GameScreen
     private int _startScreenIndex;
     private int _endScreenIndex;
     
-    protected SplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) : base(gameWindow, padding)
+    protected SplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) : base(gameWindow, container, padding)
     {
         ScreenCount = screenCount;
         EndScreenIndex = endScreenIndex;
         StartScreenIndex = startScreenIndex;
     }
 
-    protected SplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex) : 
+    protected SplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex, Padding padding) :
+        this(gameWindow, GetDefaultContainer(), screenCount, startScreenIndex, endScreenIndex, padding)
+    {
+    }
+
+    protected SplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int startScreenIndex, int endScreenIndex) : 
+        this(gameWindow, container, screenCount, startScreenIndex, endScreenIndex, new Padding(0))
+    {
+    }
+
+    protected SplitScreen(GameWindow gameWindow, int screenCount, int startScreenIndex, int endScreenIndex) :
         this(gameWindow, screenCount, startScreenIndex, endScreenIndex, new Padding(0))
     {
     }
 
-    protected SplitScreen(GameWindow gameWindow, int screenCount, int screenIndex, Padding padding) : 
+    protected SplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex, Padding padding) : 
+        this(gameWindow, container, screenCount, screenIndex, screenIndex, padding)
+    {
+    }
+
+    protected SplitScreen(GameWindow gameWindow, int screenCount, int screenIndex, Padding padding) :
         this(gameWindow, screenCount, screenIndex, screenIndex, padding)
     {
     }
 
-    protected SplitScreen(GameWindow gameWindow, int screenCount, int screenIndex) : 
+    protected SplitScreen(GameWindow gameWindow, IScalableContainer container, int screenCount, int screenIndex) : 
+        this(gameWindow, container, screenCount, screenIndex, new Padding(0))
+    {
+    }
+
+    protected SplitScreen(GameWindow gameWindow, int screenCount, int screenIndex) :
         this(gameWindow, screenCount, screenIndex, new Padding(0))
     {
     }

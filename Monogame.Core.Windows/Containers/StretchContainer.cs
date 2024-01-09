@@ -32,8 +32,12 @@ public class StretchContainer : ScalableContainer
             (int)(rect.Height * scale.Y));
     }
 
-    public override void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
+    /*public override void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
     {
         spriteBatch.Draw(RenderTarget, GetScreenPosition(gameScreen), null, Color.White, 0f, Vector2.Zero, GetScale(gameScreen), spriteEffects, 0f);
-    }
+    }*/
+
+    public override Vector2 GetDrawPosition(IGameScreen gameScreen) => GetScreenPosition(gameScreen);
+
+    public override Vector2 GetDrawScale(IGameScreen gameScreen) => GetScale(gameScreen);
 }

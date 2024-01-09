@@ -31,16 +31,6 @@ public class DisplayManager : IDisposable
             _gameScreen = value;
         }
     }
-    public IScalableContainer ScalableContainer
-    {
-        get => _scalableContainer;
-        set
-        {
-            _scalableContainer?.Dispose();
-            _scalableContainer = value;
-            GraphicsRenderer.ScalableContainer = value;
-        }
-    }
     public IGameCamera Camera
     {
         get => _camera;
@@ -50,6 +40,7 @@ public class DisplayManager : IDisposable
         }
     }
 
+    private IScalableContainer ScalableContainer => _gameScreen.ScalableContainer;
     private bool IsStarted
     {
         get => _isStarted;
@@ -64,46 +55,39 @@ public class DisplayManager : IDisposable
     private SpriteBatch _spriteBatch;
     private SpriteEffects _spriteEffects;
     private IGameScreen _gameScreen;
-    private IScalableContainer _scalableContainer;
     private IGameCamera _camera;
 
-    public DisplayManager(Game monoGame) : this(monoGame, null, null, null, null)
+    public DisplayManager(Game monoGame) : this(monoGame, null, null, null)
     {
     }
 
-    public DisplayManager(Game monoGame, IScalableContainer scalableContainer) :
-        this(monoGame, null, scalableContainer, null, null)
+    public DisplayManager(Game monoGame, IGameScreen gameScreen) :
+        this(monoGame, gameScreen, null, null)
     {
     }
 
-    public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer) :
-        this(monoGame, gameScreen, scalableContainer, null, null)
+    public DisplayManager(Game monoGame, IGameScreen gameScreen, IGraphicsRenderer graphicsRenderer) :
+        this(monoGame, gameScreen, graphicsRenderer, new GameCamera())
     {
     }
 
-    public DisplayManager(Game monoGame, IGameScreen gameScreen, IScalableContainer scalableContainer, IGraphicsRenderer graphicsRenderer) :
-        this(monoGame, gameScreen, scalableContainer, graphicsRenderer, new GameCamera())
-    {
-    }
-
-    public DisplayManager(Game monoGame, IGameScreen gameScreen = null, IScalableContainer scalableContainer = null, IGraphicsRenderer graphicsRenderer = null, IGameCamera camera = null)
+    public DisplayManager(Game monoGame, IGameScreen gameScreen = null, IGraphicsRenderer graphicsRenderer = null, IGameCamera camera = null)
     {
         _spriteBatch = new SpriteBatch(monoGame.GraphicsDevice);
         _gameScreen = gameScreen ?? new FullScreen(monoGame.Window);
-        
-        _scalableContainer = scalableContainer ?? new KeepRatioContainer(monoGame.GraphicsDevice, _gameScreen.ClientBounds.Width, _gameScreen.ClientBounds.Height);
-        if (!_scalableContainer.IsReady)
-            _scalableContainer.UpdateTargetSize(GraphicsDevice, _gameScreen.TargetSize.X, _gameScreen.TargetSize.Y);
-        
+
+        if (!ScalableContainer.IsReady)
+            ScalableContainer.UpdateTargetSize(monoGame.GraphicsDevice, _gameScreen.TargetSize.X, _gameScreen.TargetSize.Y);
+
         _camera = camera ?? new GameCamera();
-        _camera.GoTo(new Point(_scalableContainer.RenderTargetCurrentSize.X / 2, _scalableContainer.RenderTargetCurrentSize.Y / 2));
+        _camera.GoTo(new Point(ScalableContainer.RenderingSize.X / 2, ScalableContainer.RenderingSize.Y / 2));
 
         ContentManager = monoGame.Content;
         GraphicsDevice = monoGame.GraphicsDevice;
-        GraphicsRenderer = graphicsRenderer ?? new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, _scalableContainer, _camera);
+        GraphicsRenderer = graphicsRenderer ?? new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, ScalableContainer, _camera);
         GraphicsRenderer.Camera = _camera;
         GameWindow = monoGame.Window;
-
+        
         IsStarted = false;
     }
 
@@ -132,7 +116,7 @@ public class DisplayManager : IDisposable
 
     public void Draw()
     {
-        ScalableContainer.Draw(GameScreen, GraphicsDevice, _spriteBatch, _spriteEffects);
+        _gameScreen.Draw(GraphicsDevice, _spriteBatch, _spriteEffects);
     }
 
     public void EndDraw()

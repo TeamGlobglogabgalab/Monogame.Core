@@ -32,12 +32,26 @@ public class KeepRatioContainer : ScalableContainer
             (int)(rect.Height * minScale));
     }
 
-    public override void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
+    /*public override void Draw(IGameScreen gameScreen, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
     {
         float minScale = GetMinScale(gameScreen);
         Vector2 position = GetPosition(gameScreen, minScale);
         Vector2 screenPos = GetScreenPosition(gameScreen);
         spriteBatch.Draw(RenderTarget, position + screenPos, null, Color.White, 0f, Vector2.Zero, new Vector2(minScale, minScale), spriteEffects, 0f);
+    }*/
+
+    public override Vector2 GetDrawPosition(IGameScreen gameScreen)
+    {
+        float minScale = GetMinScale(gameScreen);
+        Vector2 position = GetPosition(gameScreen, minScale);
+        Vector2 screenPos = GetScreenPosition(gameScreen);
+        return position + screenPos;
+    }
+
+    public override Vector2 GetDrawScale(IGameScreen gameScreen)
+    {
+        float minScale = GetMinScale(gameScreen);
+        return new Vector2(minScale, minScale);
     }
 
     private float GetMinScale(IGameScreen gameScreen)

@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Monogame.Core;
 using Monogame.Core.Windows.Camera;
+using Monogame.Core.Windows.Containers;
 using Monogame.Core.Windows.Structs;
 
 namespace Monogame.Core.Windows.GameScreens;
@@ -21,14 +22,17 @@ public class FullScreen : GameScreen
     private readonly Point _targetSize;
     private Rectangle _bounds;
 
-    public FullScreen(GameWindow gameWindow, Padding padding) : base(gameWindow, padding)
+    public FullScreen(GameWindow gameWindow, IScalableContainer container, Padding padding) : base(gameWindow, container, padding)
     {
         GameWindow = gameWindow;
         _targetSize = new Point(gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height);
-        //_bounds = new Rectangle(0, 0, gameWindow.ClientBounds.Width, gameWindow.ClientBounds.Height);
     }
 
-    public FullScreen(GameWindow gameWindow) : this(gameWindow, new Padding(0))
+    public FullScreen(GameWindow gameWindow, IScalableContainer container) : this(gameWindow, container, new Padding(0))
+    {
+    }
+
+    public FullScreen(GameWindow gameWindow) : this(gameWindow, GetDefaultContainer(), new Padding(0))
     {
     }
 }

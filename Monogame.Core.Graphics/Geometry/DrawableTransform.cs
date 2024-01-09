@@ -68,8 +68,8 @@ public class DrawableTransform
             finalPosition = container.GetAnchorPosition(drawable.Position, rotatedPosition, drawable.Anchor);
         else //Camera
         {
-            finalPosition.X = drawable.Position.X + (int)rotatedPosition.X - camera.Target.X + container.RenderTargetCurrentSize.X / 2;
-            finalPosition.Y = drawable.Position.Y + (int)rotatedPosition.Y - camera.Target.Y + container.RenderTargetCurrentSize.Y / 2;
+            finalPosition.X = drawable.Position.X + (int)rotatedPosition.X - camera.Target.X + container.RenderingSize.X / 2;
+            finalPosition.Y = drawable.Position.Y + (int)rotatedPosition.Y - camera.Target.Y + container.RenderingSize.Y / 2;
         }
 
         //Destination Rectangle
@@ -103,8 +103,8 @@ public class DrawableTransform
             finalPosition = container.GetAnchorPosition(position, rotatedPosition, anchor);
         else //Camera
         {
-            finalPosition.X = position.X + (int)rotatedPosition.X - camera.Target.X + container.RenderTargetCurrentSize.X / 2;
-            finalPosition.Y = position.Y + (int)rotatedPosition.Y - camera.Target.Y + container.RenderTargetCurrentSize.Y / 2;
+            finalPosition.X = position.X + (int)rotatedPosition.X - camera.Target.X + container.RenderingSize.X / 2;
+            finalPosition.Y = position.Y + (int)rotatedPosition.Y - camera.Target.Y + container.RenderingSize.Y / 2;
         }
         DestinationRect = new Rectangle(finalPosition.X, finalPosition.Y, rect.Width, rect.Height);
         DestinationPosition = new Vector2(finalPosition.X, finalPosition.Y);

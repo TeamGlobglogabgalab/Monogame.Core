@@ -74,8 +74,8 @@ public abstract class Drawable : IDrawable
 
     protected IGraphicsRenderer Graphics => _displayManager.GraphicsRenderer;
     protected IGameScreen Screen => _displayManager.GameScreen;
+    protected IScalableContainer Container => Screen.ScalableContainer;
     protected IGameCamera Camera => _displayManager.Camera;
-    protected IScalableContainer Container => _displayManager.ScalableContainer;
     protected ContentManager Content => _displayManager.ContentManager;
 
     private readonly DisplayManager _displayManager;

@@ -58,11 +58,9 @@ public class Demo : Game
     protected override void LoadContent()
     {
         MainDisplay = new DisplayManager(this,
-            gameScreen: new FullScreen(Window),
-            scalableContainer: new KeepRatioContainer(GraphicsDevice, WindowResizer.TargetResolution.X, WindowResizer.TargetResolution.Y));
+            gameScreen: new FullScreen(Window, new KeepRatioContainer(GraphicsDevice, WindowResizer.TargetResolution.X, WindowResizer.TargetResolution.Y)));
         GridDisplay = new DisplayManager(this,
-            gameScreen: new PinpointScreen(Window, new Point(263, 141), new Point(914, 511), new Padding(0), new BottomRightAnchor(), MainDisplay.ScalableContainer),
-            scalableContainer: new StretchContainer(GraphicsDevice, 2438, 1363),
+            gameScreen: new PinpointScreen(Window, new Point(263, 141), new Point(914, 511), new BottomRightAnchor()),
             camera: _camera);
 
         /*_cube = new TweenCube(Display1, new Point(100, 300), 2, "#FF4500");
