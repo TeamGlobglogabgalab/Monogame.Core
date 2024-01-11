@@ -19,8 +19,7 @@ public abstract class GameScreen : IGameScreen
     public float ScreenRatio => (float)ClientBounds.Width / (float)ClientBounds.Height;
     public abstract Point TargetSize { get; }
     public IScalableContainer ScalableContainer { get; private set; }
-
-    protected GameWindow GameWindow;
+    public GameWindow GameWindow { get; protected set; }
 
     protected GameScreen(GameWindow gameWindow, IScalableContainer container, Padding padding)
     {

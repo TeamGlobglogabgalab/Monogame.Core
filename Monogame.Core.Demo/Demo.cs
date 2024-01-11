@@ -59,8 +59,11 @@ public class Demo : Game
     {
         MainDisplay = new DisplayManager(this,
             gameScreen: new FullScreen(Window, new KeepRatioContainer(GraphicsDevice, WindowResizer.TargetResolution.X, WindowResizer.TargetResolution.Y)));
+        /*GridDisplay = new DisplayManager(this,
+            gameScreen: new PinpointScreen(MainDisplay.GameScreen, new Point(702, 377), new Point(2438, 1363), new BottomRightAnchor(), new Padding(0)),
+            camera: _camera);*/
         GridDisplay = new DisplayManager(this,
-            gameScreen: new PinpointScreen(Window, new Point(263, 141), new Point(914, 511), new BottomRightAnchor()),
+            gameScreen: new PinpointScreen(Window, new Point(264, 142), new Point(916, 512), new BottomRightAnchor(), new Padding(0)),
             camera: _camera);
 
         /*_cube = new TweenCube(Display1, new Point(100, 300), 2, "#FF4500");

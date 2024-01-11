@@ -26,6 +26,12 @@ public abstract class Anchor
         BasePosition = location;
     }
 
+    public void UpdateSize(int targetWidth, int targetHeight)
+    {
+        TargetWidth = targetWidth;
+        TargetHeight = targetHeight;
+    }
+
     public abstract Point GetAnchorPosition(Point basePosition, int newWidth, int newHeight);
     public abstract Point GetAnchorPosition(Point basePosition, Point sizeDelta, int newWidth, int newHeight);
 }

@@ -16,5 +16,6 @@ public interface IGameScreen : IDisposable
     public float ScreenRatio { get; }
     public Padding Padding { get; set; }
     public IScalableContainer ScalableContainer { get; }
+    public GameWindow GameWindow { get; }
     public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteEffects spriteEffects);
 }
