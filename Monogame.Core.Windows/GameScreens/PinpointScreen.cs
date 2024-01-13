@@ -16,46 +16,47 @@ public class PinpointScreen : GameScreen
     {
         get
         {
-            /*var minScale = GetMinScale();
-            _bounds.Width = (int)(_size.X * minScale);
-            _bounds.Height = (int)(_size.Y * minScale);
-            var delta = new Point(_size.X - _bounds.Width, _size.Y - _bounds.Height);
-            Point screenSize = GetScreenSize();
-            var pos = _anchor.GetAnchorPosition(_position, delta, screenSize.X, screenSize.Y);
-            _bounds.X = pos.X;
-            _bounds.Y = pos.Y;
-            return ApplyPadding(_bounds);*/
             float minScale = GetMinScale();
             _bounds.Width = (int)(_size.X * minScale);
             _bounds.Height = (int)(_size.Y * minScale);
 
-            if(_parentScreen is null)
-            {
-                Point screenSize = GetScreenSize();
-                Vector2 scale = new Vector2((float)screenSize.X / (float)_baseWindowSize.X, (float)screenSize.Y / (float)_baseWindowSize.Y);
-                //Point delta = new Point((int)((_size.X - _bounds.Width) * scale.X), (int)((_size.Y - _bounds.Height) * scale.Y));
-                Point delta = new Point((int)((_size.X - _bounds.Width) * scale.X), (int)((_size.Y - _bounds.Height) * scale.Y));
-                _position = new Point((int)(_position.X * scale.X), (int)(_position.Y * scale.Y));
-                _anchor.UpdateSize(screenSize.X, screenSize.Y);
-                Point pos = _anchor.GetAnchorPosition(_position, screenSize.X, screenSize.Y);
-                _bounds.X = (int)(pos.X * scale.X);
-                _bounds.Y = (int)(pos.Y * scale.Y);
-            }
-            else
+            //Position in parent screen
+            if (HasParentScreen)
             {
                 Vector2 drawScale = _parentScreen!.ScalableContainer.GetDrawScale(_parentScreen);
                 Vector2 drawPos = _parentScreen.ScalableContainer.GetDrawPosition(_parentScreen);
                 Point containerSize = _parentScreen.ScalableContainer.RenderingSize;
-                Point pos = _anchor.GetAnchorPosition(_position, containerSize.X, containerSize.Y);
-                _bounds.X = (int)(pos.X * drawScale.X + drawPos.X);
-                _bounds.Y = (int)(pos.Y * drawScale.Y + drawPos.Y);
+                Point posInScreen = _anchor.GetAnchorPosition(_position, containerSize.X, containerSize.Y);
+                _bounds.X = (int)(posInScreen.X * drawScale.X + drawPos.X);
+                _bounds.Y = (int)(posInScreen.Y * drawScale.Y + drawPos.Y);
+                return ApplyPadding(_bounds);
             }
+
+            //Position in global window
+            var scale = GetScale();
+            float maxScale = GetMaxScale();
+            float maxScaleIfMinEqual1 = 1 * maxScale / minScale;
+            int screenWidth, screenHeight;
+            if (scale.X >= scale.Y)
+            {
+                screenWidth = (int)(_baseWindowSize.X * maxScaleIfMinEqual1);
+                screenHeight = _baseWindowSize.Y;
+            }
+            else
+            {
+                screenWidth = _baseWindowSize.X;
+                screenHeight = (int)(_baseWindowSize.Y * maxScaleIfMinEqual1);
+            }
+            Point posInWindow = _anchor.GetAnchorPosition(_position, screenWidth, screenHeight);
+            _bounds.X = (int)(posInWindow.X * minScale);
+            _bounds.Y = (int)(posInWindow.Y * minScale);
             return ApplyPadding(_bounds);
         }
     }
 
     public override Point TargetSize => _targetSize;
 
+    private bool HasParentScreen => _parentScreen is not null;
     private readonly Point _targetSize;
     private Point _position;
     private Point _size;
@@ -91,16 +92,28 @@ public class PinpointScreen : GameScreen
 
     private float GetMinScale()
     {
+        Vector2 scale = GetScale();
+        return Math.Min(scale.X, scale.Y);
+    }
+
+    private float GetMaxScale()
+    {
+        Vector2 scale = GetScale();
+        return Math.Max(scale.X, scale.Y);
+    }
+
+    private Vector2 GetScale()
+    {
         Point screenSize = GetScreenSize();
         float scaleX = (float)screenSize.X / _baseWindowSize.X;
         float scaleY = (float)screenSize.Y / _baseWindowSize.Y;
-        return Math.Min(scaleX * _baseScale.X, scaleY * _baseScale.Y);
+        return new Vector2(scaleX * _baseScale.X, scaleY * _baseScale.Y);
     }
 
     private Point GetScreenSize()
     {
-        if (_parentScreen is null)
-            return new Point(GameWindow.ClientBounds.Width, GameWindow.ClientBounds.Height);
-        return new Point(_parentScreen.ClientBounds.Width, _parentScreen.ClientBounds.Height);
+        if (HasParentScreen)
+            return new Point(_parentScreen!.ClientBounds.Width, _parentScreen!.ClientBounds.Height);
+        return new Point(GameWindow.ClientBounds.Width, GameWindow.ClientBounds.Height);
     }
 }
