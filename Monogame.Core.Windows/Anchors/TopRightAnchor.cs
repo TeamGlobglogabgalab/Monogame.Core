@@ -16,11 +16,4 @@ public class TopRightAnchor : Anchor
         _distanceFromRightSide = TargetWidth - basePosition.X;
         return new Point(newWidth - _distanceFromRightSide, basePosition.Y);
     }
-
-    public override Point GetAnchorPosition(Point basePosition, Point sizeDelta, int newWidth, int newHeight)
-    {
-        var pos = GetAnchorPosition(basePosition, newWidth, newHeight);
-        pos.X += sizeDelta.X;
-        return pos;
-    }
 }

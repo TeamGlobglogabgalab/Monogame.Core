@@ -33,5 +33,4 @@ public abstract class Anchor
     }
 
     public abstract Point GetAnchorPosition(Point basePosition, int newWidth, int newHeight);
-    public abstract Point GetAnchorPosition(Point basePosition, Point sizeDelta, int newWidth, int newHeight);
 }

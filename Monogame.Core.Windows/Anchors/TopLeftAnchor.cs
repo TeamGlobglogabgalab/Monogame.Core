@@ -13,9 +13,4 @@ public class TopLeftAnchor : Anchor
     {
         return basePosition;
     }
-
-    public override Point GetAnchorPosition(Point basePosition, Point sizeDelta, int newWidth, int newHeight)
-    {
-        return GetAnchorPosition(basePosition, newWidth, newHeight);
-    }
 }

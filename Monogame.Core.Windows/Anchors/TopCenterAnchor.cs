@@ -16,11 +16,4 @@ public class TopCenterAnchor : Anchor
         _distanceFromCenter = basePosition.X - TargetWidth / 2;
         return new Point(newWidth / 2 + _distanceFromCenter, basePosition.Y);
     }
-
-    public override Point GetAnchorPosition(Point basePosition, Point sizeDelta, int newWidth, int newHeight)
-    {
-        var pos = GetAnchorPosition(basePosition, newWidth, newHeight);
-        pos.X += sizeDelta.X /2;
-        return pos;
-    }
 }

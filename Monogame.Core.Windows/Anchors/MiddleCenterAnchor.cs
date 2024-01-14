@@ -18,12 +18,4 @@ public class MiddleCenterAnchor : Anchor
         _distanceFromMiddle = basePosition.Y - TargetHeight / 2;
         return new Point(newWidth / 2 + _distanceFromCenter, newHeight / 2 + _distanceFromMiddle);
     }
-
-    public override Point GetAnchorPosition(Point basePosition, Point sizeDelta, int newWidth, int newHeight)
-    {
-        var pos = GetAnchorPosition(basePosition, newWidth, newHeight);
-        pos.X += sizeDelta.X / 2;
-        pos.Y += sizeDelta.Y / 2;
-        return pos;
-    }
 }

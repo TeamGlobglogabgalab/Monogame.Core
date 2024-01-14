@@ -92,7 +92,7 @@ public class GraphicsRenderer : IGraphicsRenderer
         _transformBuffer.UpdateTransform(drawable, position, _scalableContainer, _camera);
         color = GetAlphaColor(color, drawable.Opacity);
 
-        SpriteBatch.Begin(effect: effect);
+        SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, effect: effect);
         SpriteBatch.DrawString(font, text, _transformBuffer.DestinationPosition, color, _transformBuffer.RotationRadian,
             new Vector2(0, 0), drawable.Scale, SpriteEffects.None, 0f);
         SpriteBatch.End();

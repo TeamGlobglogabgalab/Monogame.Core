@@ -16,11 +16,4 @@ public class BottomLeftAnchor : Anchor
         _distanceFromBottom = TargetHeight - basePosition.Y;
         return new Point(basePosition.X, newHeight - _distanceFromBottom);
     }
-
-    public override Point GetAnchorPosition(Point basePosition, Point sizeDelta, int newWidth, int newHeight)
-    {
-        var pos = GetAnchorPosition(basePosition, newWidth, newHeight);
-        pos.Y += sizeDelta.Y;
-        return pos;
-    }
 }

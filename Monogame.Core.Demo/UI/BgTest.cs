@@ -21,6 +21,6 @@ class BgTest : Drawable
 
     public override void Draw(GameTime gameTime)
     {
-        Graphics.Draw(this, _bgTexture, new Rectangle(0, 0, 1024, 600), gameTime);
+        Graphics.Draw(this, _bgTexture, new Rectangle(0, 0, Size.X, Size.Y), gameTime);
     }
 }

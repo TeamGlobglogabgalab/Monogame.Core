@@ -43,6 +43,8 @@ public class Demo : Game
         Content.RootDirectory = "Content";
 
         GraphicsDeviceManager  = new GraphicsDeviceManager(this);
+        GraphicsDeviceManager.PreparingDeviceSettings += Graphics_PreparingDeviceSettings;
+        GraphicsDeviceManager.ApplyChanges();  
         WindowResizer.SetWindowSize(GraphicsDeviceManager);
 
         /*_tween = TweenBuilder.From(new Point(100, 300)).To(new Point(666, 100))
@@ -59,18 +61,19 @@ public class Demo : Game
     {
         MainDisplay = new DisplayManager(this,
             gameScreen: new FullScreen(Window, new KeepRatioContainer(GraphicsDevice, WindowResizer.TargetResolution.X, WindowResizer.TargetResolution.Y)));
-        /*GridDisplay = new DisplayManager(this,
-            gameScreen: new PinpointScreen(MainDisplay.GameScreen, new Point(702, 377), new Point(2438, 1363), new BottomRightAnchor(), new Padding(0)),
-            camera: _camera);*/
         GridDisplay = new DisplayManager(this,
-            gameScreen: new PinpointScreen(Window, new Point(264, 142), new Point(916, 512), new BottomRightAnchor(), new Padding(0)),
+            gameScreen: new PinpointScreen(MainDisplay.GameScreen, new Point(702, 377), new Point(2438, 1363), new BottomRightAnchor(), new Padding(0)),
             camera: _camera);
+        /*GridDisplay = new DisplayManager(this,
+            gameScreen: new PinpointScreen(Window, new Point(264, 142), new Point(916, 512), new BottomRightAnchor(), new Padding(0)),
+            camera: _camera);*/
 
         /*_cube = new TweenCube(Display1, new Point(100, 300), 2, "#FF4500");
         _grid = new EaseGrid(Display1, new Point(512, 300), new Point(780, 466), 1);
         _btn = new TextButton(Display1, "Gloubi boulga", "Fonts/Roboto", new Point(100, 100), 2);
         _btn.Anchor = new TopLeftAnchor();
-        _bgTest = new BgTest(Display1, new Point(0, 0), 0);*/
+        _bgTest = new BgTest(GridDisplay, new Point(0, 0), 0);
+        _bgTest.Size = new Point(2438, 1363);*/
         _btn = new Logo(MainDisplay, new Point(65, 65), 0);
         _grid = new EaseGrid(GridDisplay, new Point(0, 0), new Point(2438, 1363), 0);
     }
@@ -110,5 +113,11 @@ public class Demo : Game
         Display1.End();*/
 
         base.Draw(gameTime);
+    }
+
+    private void Graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+    {
+        GraphicsDeviceManager.PreferMultiSampling = true;
+        e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
     }
 }

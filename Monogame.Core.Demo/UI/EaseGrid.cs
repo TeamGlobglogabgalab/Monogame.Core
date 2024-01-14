@@ -38,19 +38,19 @@ class EaseGrid : Drawable
         var lineWidth = Size.X - (Padding * 2);
         _linesRectangles = new Rectangle[3]
         {
-            new Rectangle(Padding, lineSpacing, lineWidth, 2), 
-            new Rectangle(Padding, lineSpacing * 2, lineWidth, 2),
-            new Rectangle(Padding, lineSpacing * 3, lineWidth, 2)
+            new Rectangle(Padding, lineSpacing, lineWidth, 3), 
+            new Rectangle(Padding, lineSpacing * 2, lineWidth, 3),
+            new Rectangle(Padding, lineSpacing * 3, lineWidth, 3)
         };
 
         //Texts
         var textColor = new Color().FromHex("#787878");
-        var horizontalBase = Size.X - Padding;
+        var horizontalBase = Size.X - Padding - 32;
         _easeTexts = new TextComponent[3]
         {
-            new TextComponent("Ease In", new Vector2(horizontalBase - _font.MeasureString("Ease In").X, _linesRectangles[0].Y + 8), textColor), 
-            new TextComponent("Ease Out", new Vector2(horizontalBase - _font.MeasureString("Ease Out").X, _linesRectangles[1].Y + 8), textColor),
-            new TextComponent("Ease In Out", new Vector2(horizontalBase - _font.MeasureString("Ease In Out").X, _linesRectangles[2].Y + 8), textColor)
+            new TextComponent("Ease In", new Vector2(horizontalBase - _font.MeasureString("Ease In").X, _linesRectangles[0].Y + 32), textColor), 
+            new TextComponent("Ease Out", new Vector2(horizontalBase - _font.MeasureString("Ease Out").X, _linesRectangles[1].Y + 32), textColor),
+            new TextComponent("Ease In Out", new Vector2(horizontalBase - _font.MeasureString("Ease In Out").X, _linesRectangles[2].Y + 32), textColor)
         };
     }
 

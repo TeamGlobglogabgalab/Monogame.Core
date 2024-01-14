@@ -84,6 +84,7 @@ public class DisplayManager : IDisposable
 
         ContentManager = monoGame.Content;
         GraphicsDevice = monoGame.GraphicsDevice;
+        GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
         GraphicsRenderer = graphicsRenderer ?? new GraphicsRenderer(_spriteBatch, monoGame.GraphicsDevice, monoGame.Content, ScalableContainer, _camera);
         GraphicsRenderer.Camera = _camera;
         GameWindow = monoGame.Window;
