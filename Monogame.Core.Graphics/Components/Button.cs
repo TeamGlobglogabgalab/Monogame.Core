@@ -10,11 +10,11 @@ namespace MonoGame.Core.Graphics.Components;
 
 public abstract class Button : Drawable, IButton
 {
-    public event IButton.ButtonEvent? ButtonClicked;
-    public event IButton.ButtonEvent? ButtonReleased;
-    public event IButton.ButtonEvent? MouseEnter;
-    public event IButton.ButtonEvent? MouseLeave;
-    public event IButton.ButtonEvent? EnabledChanged;
+    public event IButton.ButtonEvent ButtonClicked;
+    public event IButton.ButtonEvent ButtonReleased;
+    public event IButton.ButtonEvent MouseEnter;
+    public event IButton.ButtonEvent MouseLeave;
+    public event IButton.ButtonEvent EnabledChanged;
 
     public bool IsClicked
     {
@@ -31,8 +31,8 @@ public abstract class Button : Drawable, IButton
         get => _enabled;
         set
         {
-            OnEnabledChanged();
             _enabled = value;
+            OnEnabledChanged();
         }
     }
     public RectangleTransform WindowBoundingBox
@@ -74,7 +74,7 @@ public abstract class Button : Drawable, IButton
     {
         _enabled = true;
         MouseComponent = new MouseComponent(displayManager.GameWindow);
-        MouseEnter += (button) => { if(UseHandCursor) Mouse.SetCursor(MouseCursor.Hand); };
+        MouseEnter += (button) => { if (UseHandCursor) Mouse.SetCursor(MouseCursor.Hand); };
         MouseLeave += (button) => { if (UseHandCursor) Mouse.SetCursor(MouseCursor.Arrow); };
     }
 
@@ -100,6 +100,7 @@ public abstract class Button : Drawable, IButton
             _isHovered = false;
         }
     }
+
     public override void Draw(GameTime gameTime)
     {
         Update();

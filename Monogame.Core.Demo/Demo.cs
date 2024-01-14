@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Monogame.Core.Demo.Events;
 using Monogame.Core.Demo.UI;
 using Monogame.Core.Demo.Window;
 using Monogame.Core.Graphics.Display;
@@ -33,6 +34,10 @@ public class Demo : Game
     private TextButton _btn;
     private BgTest _bgTest;*/
     private GrowShrinkButton _btn;
+    private CodePreviewTabs _previewChk;
+    private CodePreviewTabs _codeChk;
+    private SimpleSequenceMenu _simpleMenu;
+    private SimpleSequenceMenu _sequenceMenu;
     private EaseGrid _grid;
     private ITweenCamera _camera;
 
@@ -75,6 +80,15 @@ public class Demo : Game
         _bgTest = new BgTest(GridDisplay, new Point(0, 0), 0);
         _bgTest.Size = new Point(2438, 1363);*/
         _btn = new Logo(MainDisplay, new Point(65, 65), 0);
+
+        _previewChk = new CodePreviewTabs(MainDisplay, "Preview", new Point(702, 272), 0);
+        _codeChk = new CodePreviewTabs(MainDisplay, "Code", new Point(977, 272), 0);
+        var group = new RadioGroupHandler(_previewChk, _codeChk);
+
+        _simpleMenu = new SimpleSequenceMenu(MainDisplay, "SIMPLE", new Point(1663, 140), 0);
+        _sequenceMenu = new SimpleSequenceMenu(MainDisplay, "SEQUENCE", new Point(2266, 140), 0);
+        var group2 = new RadioGroupHandler(_simpleMenu, _sequenceMenu);
+
         _grid = new EaseGrid(GridDisplay, new Point(0, 0), new Point(2438, 1363), 0);
     }
 
@@ -89,7 +103,7 @@ public class Demo : Game
     protected override void Draw(GameTime gameTime)
     {
         MainDisplay.Begin(WindowBackColor);
-        MainDisplay.Draw(gameTime, _btn);
+        MainDisplay.Draw(gameTime, _btn, _previewChk, _codeChk, _simpleMenu, _sequenceMenu);
 
         GridDisplay.Begin(Color.Black);
         GridDisplay.Draw(gameTime, _grid);

@@ -155,7 +155,7 @@ class Tween<TIn> : TweenBase<TIn, ITween>,
 
     protected double UpdateTime(double elapsedTimeMs, bool triggerAnimationEnded = true)
     {
-        if (!IsStarted) return _currentDuration;
+        if (!IsStarted) return _currentDuration < _totalDuration ? _currentDuration : _totalDuration;
         _currentDuration += elapsedTimeMs;
         if (_currentDuration <= _totalDuration)
             return _currentDuration;

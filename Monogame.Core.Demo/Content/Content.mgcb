@@ -32,6 +32,27 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Roboto-Black-75.spritefont
 
+#begin Fonts/Roboto-Bold-155.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Roboto-Bold-155.spritefont
+
+#begin Fonts/Roboto-Light-155.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Roboto-Light-155.spritefont
+
+#begin Fonts/Roboto-Light-56.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Roboto-Light-56.spritefont
+
 #begin Fonts/Roboto-Light-62.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -52,4 +73,11 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Roboto-Medium-50.spritefont
+
+#begin Fonts/Roboto-Medium-56.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Roboto-Medium-56.spritefont
 

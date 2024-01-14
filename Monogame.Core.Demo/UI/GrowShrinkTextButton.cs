@@ -18,8 +18,6 @@ class GrowShrinkTextButton : GrowShrinkButton
     private SpriteFont _font;
     private Rectangle _boundingBox;
     private Color _color;
-    private ITween _tweenOpacity;
-    private ITween _tweenScale;
 
     public GrowShrinkTextButton(DisplayManager displayManager, string text, string fontName, Color color, Point position, int drawOrder) : 
         base(displayManager, position, drawOrder)
